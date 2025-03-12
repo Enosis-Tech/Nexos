@@ -12,6 +12,7 @@
 
 SRC_PATH := src/z80/cpc
 HDR_PATH := include/z80/cpc
+SCP_PATH := script/install/z80
 BIN_PATH := build/bin/z80
 
 SNA_PATH := $(BIN_PATH)/sna
@@ -27,6 +28,11 @@ CPR_BIN := $(CPR_PATH)/nexos.cpr
 SRC_SNA := $(SRC_PATH)/main/sna/main.asm
 SRC_CPR := $(SRC_PATH)/main/cpr/main.asm
 
+RASM_SH := $(SCP_PATH)/rasm.sh
+WAPE_SH := $(SCP_PATH)/winape.sh
+
+WINAPE_EXEC := lib/emu/winape/WinApe.exe
+
 # ******************
 # *** Find files ***
 # ******************
@@ -38,7 +44,7 @@ HEADER := $(shell find $(HDR_PATH) -type f -name '*.asm')
 # *** Tools ***
 # *************
 
-AS := rasm
+AS := lib/bin/rasm
 
 # *******************
 # *** Tools flags ***
@@ -52,14 +58,19 @@ ASFLAGS := -I$(HDR_PATH) -I$(SRC_PATH) -s -utf8 -fq -map -twe -xr -void -mml
 
 all: $(SNA_BIN) $(CPR_BIN)
 
-install.winape:
-	@mkdir -p lib/emu/winape
-	wget http://www.winape.net/download/WinAPE20B2.zip
-	mv WinAPE20B2.zip winape.zip
-	unzip winape.zip -d lib/emu/winape
-	rm -f winape.zip
+install.all: $(RASM_SH) $(WAPE_SH)
+	./$(RASM_SH)
+	./$(WAPE_SH)
 
-run.winape: lib/emu/winape/WinApe.exe
+install.rasm: $(RASM_SH)
+	@chmod +x $<
+	./$<
+
+install.winape: $(WAPE_SH)
+	@chmod +x $<
+	./$<
+
+run.winape: $(WINAPE_EXEC)
 	wine $<
 
 clean:

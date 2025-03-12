@@ -4,3 +4,4 @@
 *.bios
 *.uefi
 lib/emu
+lib/bin
