@@ -147,7 +147,7 @@ section '_MULTIBOOT' executable align 8
 			dw TAG_KERNEL_ENTRY	;; Tag id
 			dw 0				;; Flag number
 			dd 12				;; Length of tag
-			dd main_boot	;; Entry of the tag
+			dd main_boot		;; Entry of the tag
 
 		align 8
 		.flag:
