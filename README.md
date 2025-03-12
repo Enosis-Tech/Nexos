@@ -22,7 +22,7 @@ The 8-bit versions of the operating system attempt to comply with POSIX 1990.
 
 The ABI used by the system is the same as Linux.
 
-Application development tools
+# Application development tools
 
 Comes with a C and C++ compiler called NCC (Nexos C Compiler) that allows programming for multiple architectures.
 

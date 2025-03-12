@@ -41,6 +41,6 @@ else ifeq ($(CPU),RISCV)
 
 else ifeq ($(CPU),Z80)
 
-	include mak/z80/z80.mak
+	include mak/z80/cpc.mak
 
 endif
