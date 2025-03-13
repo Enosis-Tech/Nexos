@@ -38,7 +38,7 @@ TAG_KERNEL_FLAG		= 4
 TAG_FRAMEBUFFER		= 5
 TAG_ALIGNAMENT		= 6
 TAG_EFI_SERVICE		= 7
-TAG_EFI_ENTRY_I386	= 8
+TAG_EFI_ENTRY_X64	= 8
 
 ;; *********************************
 ;; *** Structures of information ***
@@ -170,7 +170,7 @@ ection '_MULTIBOOT' executable align 8
 
 		align 8
 		.efi_boot_entry_i386:
-			dw TAG_EFI_ENTRY_I386
+			dw TAG_EFI_ENTRY_X64
 			dw 0
 			dd 12
 			dq main_boot
