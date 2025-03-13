@@ -1,50 +1,52 @@
+/ * It uses the ENTRY(main_boot) to set the starting point of the program. */
 ENTRY(main_boot)
 
+/* MEMORY: Defines memory regions with specific permissions and sizes.*/
 MEMORY {
-	BOOT	(rx)	: ORIGIN = 000K + 1M, LENGTH = 64K
-	TEXT	(rx)	: ORIGIN = 064K + 1M, LENGTH = 64K
-	DATA	(rw)	: ORIGIN = 128K + 1M, LENGTH = 64K
-	BSS		(rw)	: ORIGIN = 192K + 1M, LENGTH = 64K
-	RODATA	(r)		: ORIGIN = 256K + 1M, LENGTH = 64K
-	STACK	(rw)	: ORIGIN = 320K + 1M, LENGTH = 64K
+    BOOT    (rx)    : ORIGIN = 000K + 1M, LENGTH = 64K
+    TEXT    (rx)    : ORIGIN = 064K + 1M, LENGTH = 64K
+    DATA    (rw)    : ORIGIN = 128K + 1M, LENGTH = 64K
+    BSS     (rw)    : ORIGIN = 192K + 1M, LENGTH = 64K
+    RODATA  (r)     : ORIGIN = 256K + 1M, LENGTH = 64K
+    STACK   (rw)    : ORIGIN = 320K + 1M, LENGTH = 64K
 }
 
+/* SECTIONS: Defines various sections of the program and allocates them to memory regions.*/
 SECTIONS {
-	
-	.boot : {
-		KEEP(*(.boot))
-		KEEP(*(.multiboot))
 
-		KEEP(*(_BOOT))
-		KEEP(*(_MULTIBOOT))
-	} > BOOT
+    .boot : {
+        KEEP(*(.boot))
+        KEEP(*(.multiboot))
 
-	.text : {
-		*(.text)
-		*(.code)
+        KEEP(*(_BOOT))
+        KEEP(*(_MULTIBOOT))
+    } > BOOT
 
-		*(_TEXT)
-		*(_CODE)
-	} > TEXT
+    .text : {
+        *(.text)
+        *(.code)
 
-	.data : {
-		*(.data)
-		*(_DATA)
-	} > DATA
+        *(_TEXT)
+        *(_CODE)
+    } > TEXT
 
-	.bss (NOLOAD) : {
-		*(.bss)
-		*(_BSS)
-	} > BSS
+    .data : {
+        *(.data)
+        *(_DATA)
+    } > DATA
 
-	.rodata : {
-		*(.rodata)
-		*(_RODATA)
-	} > RODATA
+    .bss (NOLOAD) : {
+        *(.bss)
+        *(_BSS)
+    } > BSS
 
-	.stack (NOLOAD) : {
-		*(.stack)
-		*(_STACK)
-	} > STACK
+    .rodata : {
+        *(.rodata)
+        *(_RODATA)
+    } > RODATA
 
+    .stack (NOLOAD) : {
+        *(.stack)
+        *(_STACK)
+    } > STACK
 }
