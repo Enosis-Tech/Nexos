@@ -1,9 +1,9 @@
 # SPDX-License: GPL-2
 
 # *****************************
-# *** @file: x86_32.mak		***
+# *** @file: i386.mak		***
 # *** @author: Pexnídi inc	***
-# *** @date: 11/03/2025		***
+# *** @date: 13/03/2025		***
 # *****************************
 
 # ***********************
@@ -14,6 +14,7 @@ SRC_PATH := src/80x86/i386
 OBJ_PATH := build/objects/80x86/i386
 ISO_PATH := build/iso/80x86/i386
 LDS_PATH := linker/80x86
+SIT_PATH := script/80x86/install
 BIN_PATH := build/bin/80x86
 
 NEX_PATH_UEFI := build/iso/80x86/i386/kernel/uefi
@@ -74,7 +75,34 @@ clean:
 	$(RM) $(OBJECT) $(NEX_BIOS_BIN) $(NEX_UEFI_BIN) $(NEX_ISO_BIN)
 
 .PHONY: $(AS) $(LD) $(QEMU) $(GRUB) \
-		$(ASFLAGS) $(LDFLAGS) $(QEMUFLAGS)
+		$(ASFLAGS) $(LDFLAGS) $(QEMUFLAGS) \
+		all run clean .PHONY
+
+# **************************
+# *** Installation rules ***
+# **************************
+
+install.tools: $(SIT_PATH)/fasm.sh $(SIT_PATH)/qemu.sh $(SIT_PATH)/mtools.sh $(SIT_PATH)/xorriso.sh $(SIT_PATH)/grub.sh
+	./$(SIT_PATH)/fasm.sh
+	./$(SIT_PATH)/qemu.sh
+	./$(SIT_PATH)/mtools.sh
+	./$(SIT_PATH)/xorriso.sh
+	./$(SIT_PATH)/grub.sh
+
+
+install.fasm: $(SIT_PATH)/fasm.sh
+	./$<
+
+install.qemu: $(SIT_PATH)/qemu.sh
+	./$<
+
+install.mtools: $(SIT_PATH)/mtools.sh
+	./$<
+	
+install.xorriso: $(SIT_PATH)/xorriso.sh
+	./$<
+
+install.grub: $(SIT_PATH)/grub.sh
 
 # **********************
 # *** Generate files ***

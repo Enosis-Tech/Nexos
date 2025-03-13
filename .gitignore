@@ -5,3 +5,5 @@
 *.uefi
 lib/emu
 lib/bin
+rasmoutput.rasm
+rasmoutput.sym

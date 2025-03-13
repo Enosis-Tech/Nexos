@@ -1,9 +1,9 @@
 # SPDX-License: GPL-2
 
 # *****************************
-# *** @file: z80.mak		***
+# *** @file: cpc.mak		***
 # *** @author: Penídi inc	***
-# *** @date: 12/03/2025		***
+# *** @date: 13/03/2025		***
 # *****************************
 
 # ***********************
@@ -12,7 +12,7 @@
 
 SRC_PATH := src/z80/cpc
 HDR_PATH := include/z80/cpc
-SCP_PATH := script/install/z80
+SIT_PATH := script/z80/install
 BIN_PATH := build/bin/z80
 
 SNA_PATH := $(BIN_PATH)/sna
@@ -28,8 +28,8 @@ CPR_BIN := $(CPR_PATH)/nexos.cpr
 SRC_SNA := $(SRC_PATH)/main/sna/main.asm
 SRC_CPR := $(SRC_PATH)/main/cpr/main.asm
 
-RASM_SH := $(SCP_PATH)/rasm.sh
-WAPE_SH := $(SCP_PATH)/winape.sh
+RASM_SH := $(SIT_PATH)/rasm.sh
+WAPE_SH := $(SIT_PATH)/winape.sh
 
 WINAPE_EXEC := lib/emu/winape/WinApe.exe
 
@@ -38,7 +38,7 @@ WINAPE_EXEC := lib/emu/winape/WinApe.exe
 # ******************
 
 SOURCE := $(shell find $(SRC_PATH) -type f -name '*.asm')
-HEADER := $(shell find $(HDR_PATH) -type f -name '*.asm')
+HEADER := $(shell find $(HDR_PATH) -type f -name '*.inc')
 
 # *************
 # *** Tools ***
@@ -58,7 +58,7 @@ ASFLAGS := -I$(HDR_PATH) -I$(SRC_PATH) -s -utf8 -fq -map -twe -xr -void -mml
 
 all: $(SNA_BIN) $(CPR_BIN)
 
-install.all: $(RASM_SH) $(WAPE_SH)
+install.tools: $(RASM_SH) $(WAPE_SH)
 	./$(RASM_SH)
 	./$(WAPE_SH)
 
@@ -76,8 +76,20 @@ run.winape: $(WINAPE_EXEC)
 clean:
 	$(RM) $(SNA_BIN) $(CPR_BIN)
 
+# ********************
+# *** .PHONY rules ***
+# ********************
+
+.PHONY: $(AS) $(ASFLAGS)
+
+# **********************
+# *** Generate files ***
+# **********************
+
 $(SNA_BIN): $(SRC_SNA) $(SOURCE) $(HEADER)
+	@mkdir -p $(dir $@)
 	$(AS) $(ASFLAGS) -oi $@ $<
 
 $(CPR_BIN): $(SRC_CPR) $(SOURCE) $(HEADER)
+	@mkdir -p $(dir $@)
 	$(AS) $(ASFLAGS) -oc $@ $<

@@ -1,18 +1,38 @@
+<<<<<<< HEAD
 ;; SPDX-Lincense: GPL-2
+=======
+;; SPDX-License: GPL-2
+
+;; ****************************
+;; *** @file: boot.asm		***
+;; *** @author: Pexnídi inc	***
+;; *** @date: 13/03/2025	***
+;; ****************************
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 
 ;; ***********************
 ;; *** Set format file ***
 ;; ***********************
+<<<<<<< HEAD
+=======
+
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 format elf64
 
 ;; ********************************
 ;; *** Set instruction computer ***
 ;; ********************************
+<<<<<<< HEAD
 use64
+=======
+
+use32
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 
 ;; **********************************************
 ;; *** Set visible labes for linker (ld/gold) ***
 ;; **********************************************
+<<<<<<< HEAD
 global main_boot
 
 MAGIC_NUMBER    = 0xE85250D6
@@ -100,11 +120,22 @@ struc VBE_INFO {
 	.vbe_control_info:	rb 0x200
 	.vbe_mode_info:		rb 0x100
 }
+=======
+
+public main_boot
+
+;; ************************************
+;; *** Import macros and structures ***
+;; ************************************
+
+include "include/80x86/amd64/multiboot/boot.inc"
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 
 ;; ******************************
 ;; *** Sectiion for multiboot ***
 ;; ******************************
 
+<<<<<<< HEAD
 ection '_MULTIBOOT' executable align 8
 	
 	align 8
@@ -113,6 +144,16 @@ ection '_MULTIBOOT' executable align 8
 		.arch:		dq ARCHITECTURE
 		.size:		dq SIZE_HEADER
 		.checksum:	dq CHECKSUM_CALC
+=======
+section '_MULTIBOOT' executable align 8
+	
+	align 8
+	multiboot:
+		.magic:		dd MAGIC_NUMBER		;; Magic number
+		.arch:		dd ARCHITECTURE		;; Architecture (i386)
+		.size:		dd SIZE_HEADER		;; Size of the all tags in the multiboot2 header
+		.checksum:	dd CHECKSUM_CALC	;; Checksum
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 
 		align 8
 		.info_request:
@@ -126,26 +167,42 @@ ection '_MULTIBOOT' executable align 8
 		.header_address:
 			dw TAG_HEADER_ADDRESS
 			dw 0
+<<<<<<< HEAD
 			dd .header_address.end - .header_address
 			dq multiboot
 			dq multiboot
 			dq .end
 			dq bss.end
 		.header_address.end:
+=======
+			dd 24
+			dd multiboot
+			dd multiboot
+			dd .end
+			dd bss.end
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 
 		align 8
 		.tag_entry:
 			dw TAG_KERNEL_ENTRY	;; Tag id
 			dw 0				;; Flag number
 			dd 12				;; Length of tag
+<<<<<<< HEAD
 			dq main_boot		;; Entry of the tag
+=======
+			dd main_boot		;; Entry of the tag
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 
 		align 8
 		.flag:
 			dw TAG_KERNEL_FLAG
 			dw 0
 			dd 12
+<<<<<<< HEAD
 			dq 0
+=======
+			dd 0
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 
 		align 8
 		.framebuffer:
@@ -163,6 +220,7 @@ ection '_MULTIBOOT' executable align 8
 			dd 8
 
 		align 8
+<<<<<<< HEAD
 		.efi_boot_service:
 			dw TAG_EFI_SERVICE
 			dw 0
@@ -176,6 +234,8 @@ ection '_MULTIBOOT' executable align 8
 			dq main_boot
 
 		align 8
+=======
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 		.tag_end:
 			dw TAG_END
 			dw 0
@@ -190,7 +250,11 @@ ection '_MULTIBOOT' executable align 8
 section '_BSS' writeable align 4
 	
 	align 4
+<<<<<<< HEAD
 	bss: rb 0x2000
+=======
+	bss: rb $2000
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 	.end:
 
 ;; *********************************
@@ -201,7 +265,11 @@ section '_CODE' executable align 8
 
 	align 8
 	main_boot:
+<<<<<<< HEAD
 		lea rsp, [stack_end]
+=======
+		lea esp, [stack_end]
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 
 		jmp halt
 
@@ -221,6 +289,11 @@ section '_CODE' executable align 8
 ;; *************************************************
 
 section '_DATA' writeable align 4
+<<<<<<< HEAD
+=======
+	
+
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)
 
 ;; *************************************************
 ;; *** Section for the stcak from configurations ***
@@ -229,7 +302,14 @@ section '_DATA' writeable align 4
 section '_STACK' writeable align 4
 	
 	align 4
+<<<<<<< HEAD
 	stack_end: rb 0x2000
 	stack_start:
 
 times 0xFFFF - ($ - $$) db 0
+=======
+	stack_end: rb $2000
+	stack_start:
+
+times 0xFFFF - ($ - $$) db $00
+>>>>>>> cf238fe (Great update in header, Makefiles and source code)

@@ -40,10 +40,6 @@ else ifeq ($(CPU),RISCV)
 
 else ifeq ($(CPU),Z80)
 
-	COMPUTER ?= CPC
-
-	ifeq ($(COMPUTER),CPC)
-		include mak/z80/cpc.mak
-	endif
+	include mak/z80/cpc.mak
 
 endif

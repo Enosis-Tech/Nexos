@@ -1,3 +1,5 @@
+#!/bin/sh
+
 mkdir -p lib/bin
 wget https://github.com/EdouardBERGE/rasm/archive/refs/tags/v2.3.5.zip
 mv v2.3.5.zip rasm.zip
