@@ -176,7 +176,7 @@ section '_MULTIBOOT' executable align 8
 		.efi_boot_service:
 			dw TAG_EFI_SERVICE
 			dw 0
-			dw 8
+			dd 8
 
 		align 8
 		.efi_boot_entry_x64:
