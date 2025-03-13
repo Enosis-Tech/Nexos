@@ -9,7 +9,6 @@ MEMORY {
 	STACK	(rw)	: ORIGIN = 320K + 1M, LENGTH = 64K
 }
 
-
 SECTIONS {
 	
 	.boot : {
@@ -19,7 +18,6 @@ SECTIONS {
 		KEEP(*(_BOOT))
 		KEEP(*(_MULTIBOOT))
 	} > BOOT
-
 
 	.text : {
 		*(.text)
@@ -50,4 +48,3 @@ SECTIONS {
 	} > STACK
 
 }
-    
