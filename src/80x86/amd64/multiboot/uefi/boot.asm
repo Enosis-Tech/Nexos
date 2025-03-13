@@ -1,21 +1,34 @@
 ;; SPDX-License: GPL-2
 
-format pe64 dll
+format pe64 dll efi
 
 use64
 
 section '.text' code executable readable
 
-public efi_main:
+public efi_main
+efi_main:
 	mov rdi, rcx	;; EFI_HANDLE
 	mov rsi, rdx	;; EFI_SYSTEM_TABLE
 
 	call output
 
 	;; Salir de la UEFI
-	mov rcx, rdi
-	xor rdx, rdx
-	call [rsi + 8] ;; Exit_Boot_Service
+	mov rcx, rdi	;; EFI HANDLE
+	mov rdx, rsi	;; EFI_SYSTEM_TABLE
+	call exit_boot_service ;; Exit_Boot_Service
+
+	;; Retornar 
+	xor eax, eax
+	ret
+
+; Salir de los servicios de la UEFI
+exit_boot_service:
+	mov r8, rsi 	;; EFI SYSTEM TABLE
+	mov rcx, rdi	;; EFI HANDLE
+	xor rdx, rdx	;; Mapkey
+	call [rsi + 8]	;; EXIT_BOOT_SERVICE
+	ret
 
 ;; Imprimir mensaje en la pantalla
 output:
