@@ -4,13 +4,13 @@
 ;; *** Set format file ***
 ;; ***********************
 
-format elf
+format elf64
 
 ;; ********************************
 ;; *** Set instruction computer ***
 ;; ********************************
 
-use32
+use64
 
 ;; **********************************************
 ;; *** Set visible labes for linker (ld/gold) ***
@@ -22,8 +22,8 @@ public main_boot
 ;; *** Macros for the header of multiboot2 ***
 ;; *******************************************
 
-MAGIC_NUMBER	= $E85250D6
-ARCHITECTURE	= $00000000
+MAGIC_NUMBER	= 0xE85250D6
+ARCHITECTURE	= 0x00000000
 SIZE_HEADER		= (multiboot.magic - multiboot.end)
 CHECKSUM_CALC	= -(MAGIC_NUMBER + ARCHITECTURE + SIZE_HEADER)
 
@@ -39,7 +39,7 @@ TAG_KERNEL_FLAG		= 4
 TAG_FRAMEBUFFER		= 5
 TAG_ALIGNAMENT		= 6
 TAG_EFI_SERVICE		= 7
-TAG_EFI_ENTRY_I386	= 8
+TAG_EFI_ENTRY_X64	= 8
 
 ;; **********************************
 ;; *** Macros for the framebuffer ***
@@ -137,10 +137,10 @@ section '_MULTIBOOT' executable align 8
 			dw TAG_HEADER_ADDRESS
 			dw 0
 			dd .header_address.end - .header_address
-			dd multiboot
-			dd multiboot
-			dd .end
-			dd bss.end
+			dq multiboot
+			dq multiboot
+			dq .end
+			dq bss.end
 		.header_address.end:
 
 		align 8
@@ -148,7 +148,7 @@ section '_MULTIBOOT' executable align 8
 			dw TAG_KERNEL_ENTRY	;; Tag id
 			dw 0				;; Flag number
 			dd 12				;; Length of tag
-			dd main_boot		;; Entry of the tag
+			dq main_boot		;; Entry of the tag
 
 		align 8
 		.flag:
@@ -171,26 +171,25 @@ section '_MULTIBOOT' executable align 8
 			dw TAG_ALIGNAMENT
 			dw 0
 			dd 8
-
+		
 		align 8
 		.efi_boot_service:
 			dw TAG_EFI_SERVICE
 			dw 0
-			dd 8
+			dw 8
 
 		align 8
-		.efi_boot_entry_i386:
-			dw TAG_EFI_ENTRY_I386
+		.efi_boot_entry_x64:
+			dw TAG_EFI_ENTRY_X64
 			dw 0
 			dd 12
-			dd main_boot
-
+			dq main_boot
+		
 		align 8
 		.tag_end:
 			dw TAG_END
 			dw 0
 			dd 8
-
 	.end:
 
 ;; ***********************************************
@@ -200,7 +199,7 @@ section '_MULTIBOOT' executable align 8
 section '_BSS' writeable align 4
 	
 	align 4
-	bss: rb $2000
+	bss: rb 8192 ;; 8KB
 	.end:
 
 ;; *********************************
@@ -211,7 +210,7 @@ section '_CODE' executable align 8
 
 	align 8
 	main_boot:
-		lea esp, [stack_end]
+		lea rsp, [stack_end]
 
 		jmp halt
 
@@ -223,7 +222,7 @@ section '_CODE' executable align 8
 	
 	align 8
 	halt:
-		times 16 hlt
+		hlt
 		jmp halt
 
 ;; *************************************************
@@ -241,7 +240,7 @@ section '_DATA' writeable align 4
 section '_STACK' writeable align 4
 	
 	align 4
-	stack_end: rb $2000
+	stack_end: rb 8192 ;; 8K
 	stack_start:
 
-times 0xFFFF - ($ - $$) db $00
+times 0xFFFF - ($ - $$) db 0
