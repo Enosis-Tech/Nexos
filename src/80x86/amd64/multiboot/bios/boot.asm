@@ -15,8 +15,8 @@ use64
 ;; **********************************************
 global main_boot
 
-MAGIC_NUMBER    = $E85250D6
-ARCHITECTURE	= $00000000
+MAGIC_NUMBER    = 0xE85250D6
+ARCHITECTURE	= 0x00000000
 SIZE_HEADER		= (.end - multiboot)
 CHECKSUM_CALC	= -(MAGIC_NUMBER + ARCHITECTURE + SIZE_HEADER)
 
@@ -44,138 +44,192 @@ TAG_EFI_ENTRY_I386	= 8
 ;; *** Structures of information ***
 ;; *********************************
 struc BOOT_CMD {
-	.type:		dd 1
-	.size:		dd .string - .type
+	.type:		dq 1
+	.size:		dq .string - .type
 	.string:	db "  "
 }
 
 struc BOOT_LOADER_NAME {
-	.type:		dd 2
-	.size:		dd .string - .type
+	.type:		dq 2
+	.size:		dq .string - .type
 	.string:	db "Nexos"
 }
 
 struc MODULES {
-	.type:		dd 3
-	.size:		dd .string - .type
-	.mod_start:	dd 0
-	.mod_end:	dd 0
+	.type:		dq 3
+	.size:		dq .string - .type
+	.mod_start:	dq 0
+	.mod_end:	dq 0
 	.string:	db "  "
 }
 
 struc MEMORY_INFO {
-	.type:		dd 4
-	.size:		dd 16
-	.mem_lower:	dd 0
-	.mem_upper:	dd 0
+	.type:		dq 4
+	.size:		dq 16
+	.mem_lower:	dq 0
+	.mem_upper:	dq 0
 }
 
 struc BIOS_BOOT_DEVICE {
-	.type:			dd 5
-	.size:			dd 20
-	.biosdev:		dd 0
-	.partition:		dd 0
-	.sub_partition:	dd 0
+	.type:			dq 5
+	.size:			dq 20
+	.biosdev:		dq 0
+	.partition:		dq 0
+	.sub_partition:	dq 0
 
 }
 
 struc MEMORY_MAP {
-	.type:			dd 6
-	.size:			dd .reserved - .type
-	.entry_size:	dd 0
-	.entry_version:	dd 0
+	.type:			dq 6
+	.size:			dq .reserved - .type
+	.entry_size:	dq 0
+	.entry_version:	dq 0
 	.base_addr:		dq 0
 	.length:		dq 0
-	.type_two:		dd 0
-	.reserved:		dd 0
+	.type_two:		dq 0
+	.reserved:		dq 0
 }
 
 struc VBE_INFO {
-	.type:				dd 7
-	.size:				dd 784
+	.type:				dq 7
+	.size:				dq 784
 	.vbe_mode:			dw 0
 	.vbe_interface_seg:	dw 0
 	.vbe_interface_off:	dw 0
 	.vbe_interface_len:	dw 0
-	.vbe_control_info:	rb $200
-	.vbe_mode_info:		rb $100
+	.vbe_control_info:	rb 0x200
+	.vbe_mode_info:		rb 0x100
 }
 
+;; ******************************
+;; *** Sectiion for multiboot ***
+;; ******************************
 
-section .multiboot
-align 8
-multiboot: 
-    .magic: dd MAGIC_NUMBER
-    .arch: dd ARCHITECTURE
-    .size: dd SIZE_HEADER
-    .checksum: dd CHECKSUM_CALC
+ection '_MULTIBOOT' executable align 8
+	
+	align 8
+	multiboot:
+		.magic:		dq MAGIC_NUMBER
+		.arch:		dq ARCHITECTURE
+		.size:		dq SIZE_HEADER
+		.checksum:	dq CHECKSUM_CALC
 
-    align 8
-    .info_request:
-        dw 1
-        dw 0
-        dd .info_request.end - .info_request
-        dd 4, 5, 6
-    .info_request.end
+		align 8
+		.info_request:
+			dw TAG_INFO_REQUEST
+			dw 0
+			dd .info_request.end - .info_request
+			dd 4, 5, 6
+		.info_request.end:
 
-    align 8
-    .header_address:
-        dw 2
-        dw 0
-        dd 24
-        dd multiboot
-        dd multiboot
-        dd .end
-    
-    align 8
-    .flag:
-        dw 4
-        dw 0
-        dd 12
-        dd 0
-    
-    align 8
-    .framebuffer:
-        dw 5
-        dw 0
-        dd 20
-        dd FRAME_WIDTH
-        dd FRAME_HEIGHT
-        dd FRAME_DEPTH
-    
-    align 8
-    .alignament:
-        dw 6
-        dw 0
-        dd 8
+		align 8
+		.header_address:
+			dw TAG_HEADER_ADDRESS
+			dw 0
+			dd .header_address.end - .header_address
+			dq multiboot
+			dq multiboot
+			dq .end
+			dq bss.end
+		.header_address.end:
 
-    align 8
-    .tag_end:
-        dw 0
-        dw 0 
-        dd 8
-    .end
+		align 8
+		.tag_entry:
+			dw TAG_KERNEL_ENTRY	;; Tag id
+			dw 0				;; Flag number
+			dd 12				;; Length of tag
+			dq main_boot		;; Entry of the tag
 
-;; BSS section
-section .bss
-align 8
-stack_start: resb 8192 ; 8KB
-stack_end:
+		align 8
+		.flag:
+			dw TAG_KERNEL_FLAG
+			dw 0
+			dd 12
+			dq 0
 
-;; Code section
+		align 8
+		.framebuffer:
+			dw TAG_FRAMEBUFFER
+			dw 0
+			dd 20
+			dd FRAME_WIDTH
+			dd FRAME_HEIGHT
+			dd FRAME_DEPTH
 
-section .text
-align 8
+		align 8
+		.alignament:
+			dw TAG_ALIGNAMENT
+			dw 0
+			dd 8
 
-main_boot:
-    lea rsp, [stack_end]
-    cli ; Disable interrupts
-    jmp halt
+		align 8
+		.efi_boot_service:
+			dw TAG_EFI_SERVICE
+			dw 0
+			dd 8
 
-halt:
-    hlt
-    jmp halt
+		align 8
+		.efi_boot_entry_i386:
+			dw TAG_EFI_ENTRY_I386
+			dw 0
+			dd 12
+			dq main_boot
 
-;; Data section
-section .data
-align 8
+		align 8
+		.tag_end:
+			dw TAG_END
+			dw 0
+			dd 8
+
+	.end:
+
+;; ***********************************************
+;; *** BSS section for the tag 2 of multiboot2 ***
+;; ***********************************************
+
+section '_BSS' writeable align 4
+	
+	align 4
+	bss: rb 0x2000
+	.end:
+
+;; *********************************
+;; *** Section of configurations ***
+;; *********************************
+
+section '_CODE' executable align 8
+
+	align 8
+	main_boot:
+		lea rsp, [stack_end]
+
+		jmp halt
+
+;; ************************************
+;; *** Common labes for the entries ***
+;; ************************************
+
+section '_CODE' executable align 8
+	
+	align 8
+	halt:
+		times 16 hlt
+		jmp halt
+
+;; *************************************************
+;; *** Section for the structures of information ***
+;; *************************************************
+
+section '_DATA' writeable align 4
+
+;; *************************************************
+;; *** Section for the stcak from configurations ***
+;; *************************************************
+
+section '_STACK' writeable align 4
+	
+	align 4
+	stack_end: rb 0x2000
+	stack_start:
+
+times 0xFFFF - ($ - $$) db 0
