@@ -9,24 +9,45 @@ MEMORY {
 	STACK	(rw)	: ORIGIN = 320K + 1M, LENGTH = 64K
 }
 
-SECTIONS {
-    .data : {
-        *(.data)
-        *(_DATA)
-    }
 
-    .text : {
-        *(.text)
-        *(.code)
-        *(_CODE)
-        *(_TEXT)
-    }
-    .boot : {
-        *(.multiboot)
-        *(.boot)
-        *(_MULTIBOOT)
-        *(_BOOT)
-    }
-    
-    
+SECTIONS {
+	
+	.boot : {
+		KEEP(*(.boot))
+		KEEP(*(.multiboot))
+
+		KEEP(*(_BOOT))
+		KEEP(*(_MULTIBOOT))
+	} > BOOT
+
+
+	.text : {
+		*(.text)
+		*(.code)
+
+		*(_TEXT)
+		*(_CODE)
+	} > TEXT
+
+	.data : {
+		*(.data)
+		*(_DATA)
+	} > DATA
+
+	.bss (NOLOAD) : {
+		*(.bss)
+		*(_BSS)
+	} > BSS
+
+	.rodata : {
+		*(.rodata)
+		*(_RODATA)
+	} > RODATA
+
+	.stack (NOLOAD) : {
+		*(.stack)
+		*(_STACK)
+	} > STACK
+
 }
+    
