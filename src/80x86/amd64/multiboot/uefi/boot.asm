@@ -1,57 +1,5 @@
 ;; SPDX-License: GPL-2
 
-<<<<<<< HEAD
-format pe64 dll efi
-
-use64
-
-section '.text' code executable readable
-
-public efi_main
-efi_main:
-	mov rdi, rcx	;; EFI_HANDLE
-	mov rsi, rdx	;; EFI_SYSTEM_TABLE
-
-	call output
-
-	;; Salir de la UEFI
-	mov rcx, rdi	;; EFI HANDLE
-	mov rdx, rsi	;; EFI_SYSTEM_TABLE
-	call exit_boot_service ;; Exit_Boot_Service
-
-	;; Retornar 
-	xor eax, eax
-	ret
-
-; Salir de los servicios de la UEFI
-exit_boot_service:
-	mov r8, rsi 	;; EFI SYSTEM TABLE
-	mov rcx, rdi	;; EFI HANDLE
-	xor rdx, rdx	;; Mapkey
-	call [rsi + 8]	;; EXIT_BOOT_SERVICE
-	ret
-
-;; Imprimir mensaje en la pantalla
-output:
-	mov rax, [rsi + 5 * 8] ;; ConOut
-
-	mov rcx, rax
-	lea rdx, [message]
-	call [rax + 8] ;; Output_String
-
-	ret
-
-;; Data
-section '.data' data readable writeable
-
-message db 'Boot UEFI exitoso!', 0
-
-;; Stack (para el retorno de la UEFI)
-
-section '.bss' writeable
-
-stack resb 8192 ;; 8KB
-=======
 ;; ****************************
 ;; *** @file: boot.asm		***
 ;; *** @author: Pexnídi inc	***
@@ -82,6 +30,16 @@ public main_boot
 
 include "include/80x86/amd64/multiboot/boot.inc"
 
+;; ***********************************************
+;; *** BSS section for the tag 2 of multiboot2 ***
+;; ***********************************************
+
+section '_BSS' writeable align 4
+	
+	align 4
+	bss: rb $2000
+	.end:
+
 ;; ******************************
 ;; *** Sectiion for multiboot ***
 ;; ******************************
@@ -90,10 +48,10 @@ section '_MULTIBOOT' executable align 8
 	
 	align 8
 	multiboot:
-		.magic:		dd MAGIC_NUMBER
-		.arch:		dd ARCHITECTURE
-		.size:		dd SIZE_HEADER
-		.checksum:	dd CHECKSUM_CALC
+		.magic:		dd MAGIC_NUMBER		;; Magic number
+		.arch:		dd ARCHITECTURE		;; Architecture (i386)
+		.size:		dd SIZE_HEADER		;; Size of the all tags in the multiboot2 header
+		.checksum:	dd CHECKSUM_CALC	;; Checksum
 
 		align 8
 		.info_request:
@@ -127,15 +85,16 @@ section '_MULTIBOOT' executable align 8
 			dw 0
 			dd 12
 			dd 0
+			dd 0
 
 		align 8
 		.framebuffer:
 			dw TAG_FRAMEBUFFER
 			dw 0
 			dd 20
-			dd FRAME_WIDTH
-			dd FRAME_HEIGHT
-			dd FRAME_DEPTH
+			dd ZERO
+			dd ZERO
+			dd ZERO
 
 		align 8
 		.alignament:
@@ -164,16 +123,6 @@ section '_MULTIBOOT' executable align 8
 
 	.end:
 
-;; ***********************************************
-;; *** BSS section for the tag 2 of multiboot2 ***
-;; ***********************************************
-
-section '_BSS' writeable align 4
-	
-	align 4
-	bss: rb $2000
-	.end:
-
 ;; *********************************
 ;; *** Section of configurations ***
 ;; *********************************
@@ -182,19 +131,17 @@ section '_CODE' executable align 8
 
 	align 8
 	main_boot:
-		lea rsp, [stack_end]
+		lea rsp, qword [stack_end]
 
 		jmp halt
 
-;; ************************************
-;; *** Common labes for the entries ***
-;; ************************************
-
-section '_CODE' executable align 8
+;; **************************
+;; *** Subrutines of boot ***
+;; **************************
 	
 	align 8
 	halt:
-		times 16 hlt
+		times $10 hlt
 		jmp halt
 
 ;; *************************************************
@@ -202,7 +149,6 @@ section '_CODE' executable align 8
 ;; *************************************************
 
 section '_DATA' writeable align 4
-	
 
 
 ;; *************************************************
@@ -215,5 +161,4 @@ section '_STACK' writeable align 4
 	stack_end: rb $2000
 	stack_start:
 
-times 0xFFFF - ($ - $$) db $00
->>>>>>> cf238fe (Great update in header, Makefiles and source code)
+times $FFFF - ($ - $$) db $00

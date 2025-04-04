@@ -17,6 +17,7 @@ LDS_PATH := linker/80x86
 SIT_PATH := script/80x86/install
 BIN_PATH := build/bin/80x86
 
+BINUTILS_PATH := lib/binutils/bin
 NEX_PATH_UEFI := build/iso/80x86/i386/kernel/uefi
 NEX_PATH_BIOS := build/iso/80x86/i386/kernel/bios
 GRB_PATH_BOOT := build/iso/80x86/i386/boot/grub
@@ -33,6 +34,12 @@ NEX_UEFI_BIN := $(NEX_PATH_UEFI)/nexos.uefi
 NEX_BIOS_BIN := $(NEX_PATH_BIOS)/nexos.bios
 GRB_CFG_FILE := $(GRB_PATH_BOOT)/grub.cfg
 
+# **********************
+# *** Important data ***
+# **********************
+
+nproc := $(shell nproc)
+
 # ******************
 # *** Find files ***
 # ******************
@@ -48,7 +55,16 @@ OBJECT_BIOS := $(filter-out $(OBJ_PATH)/multiboot/uefi/boot.opx,$(OBJECT))
 # *************
 
 AS := fasm
-LD := ld
+
+ifeq ($(LD),ld)
+
+	LD := ld
+
+else
+
+	LD := ./$(BINUTILS_PATH)/ld
+
+endif
 
 QEMU := qemu-system-i386
 GRUB := grub-mkrescue
@@ -66,10 +82,16 @@ QEMUFLAGS := -vga std -boot d -cdrom
 # *** Rules ***
 # *************
 
-all: $(OBJECT) $(NEX_BIOS_BIN) $(NEX_UEFI_BIN) $(NEX_ISO_BIN)
+all:
+	make -j$(nproc) system TARGET=x86-32
+
+system: $(OBJECT) $(NEX_BIOS_BIN) $(NEX_UEFI_BIN) $(NEX_ISO_BIN)
 
 run: $(NEX_ISO_BIN)
 	$(QEMU) $(QEMUFLAGS) $<
+
+boot: $(NEX_ISO_BIN)
+	sudo dd status=progress if=$< of=/dev/sda
 
 clean:
 	$(RM) $(OBJECT) $(NEX_BIOS_BIN) $(NEX_UEFI_BIN) $(NEX_ISO_BIN)
@@ -77,32 +99,6 @@ clean:
 .PHONY: $(AS) $(LD) $(QEMU) $(GRUB) \
 		$(ASFLAGS) $(LDFLAGS) $(QEMUFLAGS) \
 		all run clean .PHONY
-
-# **************************
-# *** Installation rules ***
-# **************************
-
-install.tools: $(SIT_PATH)/fasm.sh $(SIT_PATH)/qemu.sh $(SIT_PATH)/mtools.sh $(SIT_PATH)/xorriso.sh $(SIT_PATH)/grub.sh
-	./$(SIT_PATH)/fasm.sh
-	./$(SIT_PATH)/qemu.sh
-	./$(SIT_PATH)/mtools.sh
-	./$(SIT_PATH)/xorriso.sh
-	./$(SIT_PATH)/grub.sh
-
-
-install.fasm: $(SIT_PATH)/fasm.sh
-	./$<
-
-install.qemu: $(SIT_PATH)/qemu.sh
-	./$<
-
-install.mtools: $(SIT_PATH)/mtools.sh
-	./$<
-	
-install.xorriso: $(SIT_PATH)/xorriso.sh
-	./$<
-
-install.grub: $(SIT_PATH)/grub.sh
 
 # **********************
 # *** Generate files ***

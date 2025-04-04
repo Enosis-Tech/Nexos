@@ -1,9 +1,12 @@
 *.o
 *.opx
 *.iso
+*.bin
 *.bios
 *.uefi
 lib/emu
 lib/bin
+lib/binutils
+build/iso/80x86/8086
 rasmoutput.rasm
 rasmoutput.sym

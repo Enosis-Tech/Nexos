@@ -13,37 +13,43 @@
 if ~defined __BOOT_INC__
 __BOOT_INC__ equ 1
 
+;; **********************
+;; *** General macros ***
+;; **********************
+
+ZERO equ 0
+
 ;; *******************************************
 ;; *** Macros for the header of multiboot2 ***
 ;; *******************************************
 
-MAGIC_NUMBER	= $E85250D6
-ARCHITECTURE	= $00000000
-SIZE_HEADER		= (multiboot.magic - multiboot.end)
-CHECKSUM_CALC	= -(MAGIC_NUMBER + ARCHITECTURE + SIZE_HEADER)
+MAGIC_NUMBER	equ $E85250D6
+ARCHITECTURE	equ $00000000
+SIZE_HEADER		equ (multiboot.magic - multiboot.end)
+CHECKSUM_CALC	equ -(MAGIC_NUMBER + ARCHITECTURE + SIZE_HEADER)
 
 ;; *********************************************
 ;; *** Macros for the tags of the multiboot2 ***
 ;; *********************************************
 
-TAG_END				= 0
-TAG_INFO_REQUEST	= 1
-TAG_HEADER_ADDRESS	= 2
-TAG_KERNEL_ENTRY	= 3
-TAG_KERNEL_FLAG		= 4
-TAG_FRAMEBUFFER		= 5
-TAG_ALIGNAMENT		= 6
-TAG_EFI_SERVICE		= 7
-TAG_EFI_ENTRY_I386	= 8
-TAG_EFI_ENTRY_AMD64	= 9
+TAG_END				equ 0
+TAG_INFO_REQUEST	equ 1
+TAG_HEADER_ADDRESS	equ 2
+TAG_KERNEL_ENTRY	equ 3
+TAG_KERNEL_FLAG		equ 4
+TAG_FRAMEBUFFER		equ 5
+TAG_ALIGNAMENT		equ 6
+TAG_EFI_SERVICE		equ 7
+TAG_EFI_ENTRY_I386	equ 8
+TAG_EFI_ENTRY_AMD64	equ 9
 
 ;; **********************************
 ;; *** Macros for the framebuffer ***
 ;; **********************************
 
-FRAME_WIDTH		= 1080
-FRAME_HEIGHT	= 720
-FRAME_DEPTH		= 32
+FRAME_WIDTH		equ 1080
+FRAME_HEIGHT	equ 720
+FRAME_DEPTH		equ 32
 
 ;; *********************************
 ;; *** Structures of information ***

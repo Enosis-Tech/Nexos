@@ -6,40 +6,61 @@ SHELL := /bin/sh
 
 # Basic vars
 
-CPU ?= x86-32
+TARGET ?= 8086
+SET-ENV ?= none
+
+# Set enviroment
+
+ifeq ($(SET-ENV),binutils)
+
+	include mak/tools/gnu/binutils.mak
+
+else ifeq ($(SET-ENV),rasm)
+
+	include mak/tools/free-code/rasm.mak
+
+else ifeq ($(SET-ENV),winape)
+
+	include mak/tools/private-code/winape.mak
+
+endif
 
 # Compiling for architecture
 
-ifeq ($(CPU),x86-64)
+ifeq ($(TARGET),x86-64)
 
 	include mak/80x86/amd64.mak
 
-else ifeq ($(CPU),x86-32)
+else ifeq ($(TARGET),x86-32)
 
 	include mak/80x86/i386.mak
 
-else ifeq ($(CPU),x86)
+else ifeq ($(TARGET),8086)
 
 	include mak/80x86/8086.mak
 
-else ifeq ($(CPU),ARM64)
+else ifeq ($(TARGET),ARM-64)
 
 	include mak/arm/aarch64.mak
 
-else ifeq ($(CPU),ARM)
+else ifeq ($(TARGET),ARM)
 
 	include mak/arm/arm.mak
 
-else ifeq ($(CPU),RISCV64)
+else ifeq ($(TARGET),RISC-V64)
 
 	include mak/riscv/riscv64.mak
 
-else ifeq ($(CPU),RISCV)
+else ifeq ($(TARGET),RISC-V)
 
 	include mak/riscv/riscv.mak
 
-else ifeq ($(CPU),Z80)
+else ifeq ($(TARGET),CPC-6128)
 
-	include mak/z80/cpc.mak
+	include mak/z80/cpc_6128.mak
+
+else ifeq ($(TARGET),MICRO-ENOSIS)
+
+	include mak/z80/enosis.mak
 
 endif

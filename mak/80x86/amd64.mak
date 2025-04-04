@@ -1,15 +1,9 @@
 # SPDX-License: GPL-2
 
 # *****************************
-<<<<<<< HEAD
 # *** @file: x86_64.mak		***
 # *** @author: Pexnídi inc	***
 # *** @date: 12/03/2025		***
-=======
-# *** @file: amd64.mak		***
-# *** @author: Pexnídi inc	***
-# *** @date: 13/03/2025		***
->>>>>>> cf238fe (Great update in header, Makefiles and source code)
 # *****************************
 
 # ***********************
@@ -19,23 +13,16 @@
 SRC_PATH := src/80x86/amd64
 OBJ_PATH := build/objects/80x86/amd64
 ISO_PATH := build/iso/80x86/amd64
-<<<<<<< HEAD
 LDS_PATH := linker/80x86/amd64
 BIN_PATH := build/bin/80x86/amd64
-=======
 LDS_PATH := linker/80x86
 SIT_PATH := script/80x86/install
 BIN_PATH := build/bin/80x86
->>>>>>> cf238fe (Great update in header, Makefiles and source code)
 
 NEX_PATH_UEFI := build/iso/80x86/amd64/kernel/uefi
 NEX_PATH_BIOS := build/iso/80x86/amd64/kernel/bios
 GRB_PATH_BOOT := build/iso/80x86/amd64/boot/grub
 
-<<<<<<< HEAD
-
-=======
->>>>>>> cf238fe (Great update in header, Makefiles and source code)
 # *********************
 # *** Special files ***
 # *********************
@@ -63,7 +50,16 @@ OBJECT_BIOS := $(filter-out $(OBJ_PATH)/multiboot/uefi/boot.opx,$(OBJECT))
 # *************
 
 AS := fasm
-LD := ld
+
+ifeq ($(LD),ld)
+
+	LD := ld
+
+else
+
+	LD := ./$(BINUTILS_PATH)/ld
+
+endif
 
 QEMU := qemu-system-x86_64
 GRUB := grub-mkrescue
@@ -72,11 +68,7 @@ GRUB := grub-mkrescue
 # *** Tools flags ***
 # *******************
 
-<<<<<<< HEAD
-ASFLAGS := -p 10 -D__x86_64__
-=======
 ASFLAGS := -p 10
->>>>>>> cf238fe (Great update in header, Makefiles and source code)
 LDFLAGS := -m elf_x86_64 -T$(LDS_FILE)
 
 QEMUFLAGS := -vga std -boot d -cdrom 
@@ -94,9 +86,7 @@ clean:
 	$(RM) $(OBJECT) $(NEX_BIOS_BIN) $(NEX_UEFI_BIN) $(NEX_ISO_BIN)
 
 .PHONY: $(AS) $(LD) $(QEMU) $(GRUB) \
-<<<<<<< HEAD
 		$(ASFLAGS) $(LDFLAGS) $(QEMUFLAGS)
-=======
 		$(ASFLAGS) $(LDFLAGS) $(QEMUFLAGS) \
 		all run clean .PHONY
 
@@ -118,7 +108,6 @@ install.xorriso: $(SIT_PATH)/xorriso.sh
 
 install.grub: $(SIT_PATH)/grub.sh
 	./$<
->>>>>>> cf238fe (Great update in header, Makefiles and source code)
 
 # **********************
 # *** Generate files ***

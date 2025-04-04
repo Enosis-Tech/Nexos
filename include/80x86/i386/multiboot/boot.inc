@@ -37,6 +37,20 @@ TAG_EFI_SERVICE		= 7
 TAG_EFI_ENTRY_I386	= 8
 TAG_EFI_ENTRY_AMD64	= 9
 
+;; **************************************
+;; *** Length of tags from multiboot2 ***
+;; **************************************
+
+SIZE_INFO_REQUEST		= 1
+SIZE_HEADER_ADDRESS		= 2
+SIZE_KERNEL_ENTRY		= 3
+SIZE_KERNEL_FLAG		= 4
+SIZE_FRAMEBUFFER		= 5
+SIZE_ALIGNAMENT			= 6
+SIZE_EFI_SERVICE		= 7
+SIZE_EFI_ENTRY_I386		= 8
+SIZE_EFI_ENTRY_AMD64	= 9
+
 ;; **********************************
 ;; *** Macros for the framebuffer ***
 ;; **********************************

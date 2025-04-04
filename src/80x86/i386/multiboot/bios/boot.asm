@@ -43,23 +43,23 @@ section '_MULTIBOOT' executable align 8
 		.size:		dd SIZE_HEADER		;; Size of the all tags in the multiboot2 header
 		.checksum:	dd CHECKSUM_CALC	;; Checksum
 
-		align 8
-		.info_request:
-			dw TAG_INFO_REQUEST
-			dw 0
-			dd .info_request.end - .info_request
-			dd 4, 5, 6
-		.info_request.end:
+;;		align 8
+;;		.info_request:
+;;			dw TAG_INFO_REQUEST
+;;			dw 0
+;;			dd .info_request.end - .info_request
+;;			dd 4, 5, 6
+;;		.info_request.end:
 
-		align 8
-		.header_address:
-			dw TAG_HEADER_ADDRESS
-			dw 0
-			dd 24
-			dd multiboot
-			dd multiboot
-			dd .end
-			dd bss.end
+;;		align 8
+;;		.header_address:
+;;			dw TAG_HEADER_ADDRESS
+;;			dw 0
+;;			dd 24
+;;			dd multiboot
+;;			dd multiboot
+;;			dd .end
+;;			dd bss.end
 
 		align 8
 		.tag_entry:
@@ -68,27 +68,27 @@ section '_MULTIBOOT' executable align 8
 			dd 12				;; Length of tag
 			dd main_boot		;; Entry of the tag
 
-		align 8
-		.flag:
-			dw TAG_KERNEL_FLAG
-			dw 0
-			dd 12
-			dd 0
+;;		align 8
+;;		.flag:
+;;			dw TAG_KERNEL_FLAG
+;;			dw 0
+;;			dd 12
+;;			dd 0
 
-		align 8
-		.framebuffer:
-			dw TAG_FRAMEBUFFER
-			dw 0
-			dd 20
-			dd FRAME_WIDTH
-			dd FRAME_HEIGHT
-			dd FRAME_DEPTH
+;;		align 8
+;;		.framebuffer:
+;;			dw TAG_FRAMEBUFFER
+;;			dw 0
+;;			dd 20
+;;			dd FRAME_WIDTH
+;;			dd FRAME_HEIGHT
+;;			dd FRAME_DEPTH
 
-		align 8
-		.alignament:
-			dw TAG_ALIGNAMENT
-			dw 0
-			dd 8
+;;		align 8
+;;		.alignament:
+;;			dw TAG_ALIGNAMENT
+;;			dw 0
+;;			dd 8
 
 		align 8
 		.tag_end:
@@ -104,9 +104,9 @@ section '_MULTIBOOT' executable align 8
 
 section '_BSS' writeable align 4
 	
-	align 4
-	bss: rb $2000
-	.end:
+;;	align 4
+;;	bss: rb $2000
+;;	.end:
 
 ;; *********************************
 ;; *** Section of configurations ***
@@ -117,6 +117,8 @@ section '_CODE' executable align 8
 	align 8
 	main_boot:
 		lea esp, [stack_end]
+
+		
 
 		jmp halt
 
