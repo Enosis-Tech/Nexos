@@ -6,7 +6,7 @@ SHELL := /bin/sh
 
 # Basic vars
 
-TARGET ?= 8086
+TARGET ?= MICRO-ENOSIS
 SET-ENV ?= none
 
 # Set enviroment

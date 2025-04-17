@@ -10,8 +10,9 @@
 ;; *** Avoid file re-definitions ***
 ;; *********************************
 
-IFNDEF __ISC_INC__
-__ISC_INC__ equ 1
+IFNDEF __BOOT_INC__
+__BOOT_INC__ equ 1
 
+EXTERN		boot
 
 ENDIF
