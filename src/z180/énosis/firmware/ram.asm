@@ -66,7 +66,7 @@ load_ram_bootloader_loop:
 	endr
 
 	ld		a, b
-	cp		c
+	tst		c
 	jr		nz, load_ram_bootloader_loop
 
 load_ram_end:
