@@ -2,7 +2,7 @@
 
 ;; ****************************
 ;; *** @author: Έnosis Tech	***
-;; *** @file: idt.inc		***
+;; *** @file: graphics.inc	***
 ;; *** @date: 16/04/2025	***
 ;; ****************************
 
@@ -10,10 +10,8 @@
 ;; *** Avoid file re-definitions ***
 ;; *********************************
 
-IFNDEF __IDT_INC__
-__IDT_INC__ equ 1
+IFNDEF __GRAPHICS_INC__
+__GRAPHICS_INC__ equ 1
 
-EXTERN		IDT
-EXTERN		IDT_FIND_SERVICE
 
 ENDIF

@@ -10,20 +10,7 @@
 ;; *** Import files ***
 ;; ********************
 
-INCLUDE		"firmware/graphics.inc"
-
-;; *********************
-;; *** Public labels ***
-;; *********************
-
-PUBLIC		IDT
-PUBLIC		IDT_FIND_SERVICE
-
-;; ***********************
-;; *** Section of code ***
-;; ***********************
-
-SECTION		_CODE
+include		"firmware/graphics.inc"
 
 ;; *************************
 ;; *** Find BIOS Service ***
@@ -36,27 +23,29 @@ SECTION		_CODE
 ;; service	= register A
 ;; length	= 2
 
-IDT_FIND_SERVICE:
-	PUSH	HL			;; Save HL in the stack
+idt_find_service:
+	
+	push	hl			;; Save HL in the stack
 
-	ADD		A, A		;; A * length
-	LD		HL, IDT		;; IX = &IDT
-	ADD		A, L		;; IDT + SERVICE
-	LD		L, A		;; IDT = IDT + SERVICE
-	JP		(HL)		;; GOTO (BIOS Service)
+	add		a			;; A * length
+	ld		hl, idt		;; IX = &IDT
+	add		l			;; IDT + SERVICE
+	ld		l, a		;; IDT = IDT + SERVICE
+	jp		(hl)		;; GOTO (BIOS Service)
 
 ;; *********************************
 ;; *** Section of read only data ***
 ;; *********************************
 
-SECTION		_RODATA
 
 ;; *******************************
 ;; *** Interruption data table ***
 ;; *******************************
 
-IDT:
-	DEFW	VIDEO_MODE_ZERO
-	DEFW	VIDEO_MODE_ONE
-	DEFW	VIDEO_MODE_TWO
-	DEFW	VIDEO_MODE_THREE
+idt:
+	defw	video_mode_zero
+	defw	video_mode_one
+	defw	video_mode_two
+	defw	video_mode_three
+
+limit_idt: defs	$D0 - ($ - idt)

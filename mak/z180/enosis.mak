@@ -10,10 +10,9 @@
 # *** Important Paths ***
 # ***********************
 
-SRC_PATH := src/z80/énosis
-HDR_PATH := include/z80/énosis
-OBJ_PATH := build/objects/z80/énosis
-BIN_PATH := build/bin/z80/énosis
+SRC_PATH := src/z180/énosis
+HDR_PATH := include/z180/énosis
+BIN_PATH := build/bin/z180/énosis
 
 # *********************
 # *** Special files ***
@@ -26,7 +25,7 @@ NEX_USER := $(BIN_PATH)/enosis-user.bin
 
 NEX_BIN := $(BIN_PATH)/nexos.bin
 
-NEX_SRC := $(SRC_PATH)/main/nexos.asm
+NEX_SRC := $(SRC_PATH)/main/main.asm
 
 # **********************
 # *** Important data ***
@@ -39,7 +38,7 @@ nproc := $(shell nproc)
 # ******************
 
 SOURCE := $(shell find $(SRC_PATH) -type f -name '*.asm')
-OBJECT := $(patsubst $(SRC_PATH)/%.asm,$(OBJ_PATH)/%.o,$(SOURCE))
+HEADER := $(shell find $(HDR_PATH) -type f -name '*.inc')
 
 # *************
 # *** Tools ***
@@ -54,7 +53,7 @@ Z88DKAPP := z88dk.z88dk-appmake
 # *** Tools flags ***
 # *******************
 
-Z88DKASMFLAGS := -m=z180 -r0000 -float=ieee16 -I=$(HDR_PATH)
+Z88DKASMFLAGS := -m=z180 -r0000 -float=ieee16 -I=$(SRC_PATH) -I=$(HDR_PATH)
 Z88DKDISFLAGS := -mz180
 Z88DKTICFLAGS := 
 Z88DKAPPFLAGS := +hex
@@ -64,15 +63,15 @@ Z88DKAPPFLAGS := +hex
 # *************
 
 all:
-	make -j$(nproc) fast TARGET=MICRO-ENOSIS
+	make -j$(nproc) system TARGET=MICRO-ENOSIS
 
-fast: $(NEX_BIN)
-
-system: $(NEX_FIRM) $(NEX_BOOT) $(NEX_KERN) $(NEX_USER) $(NEX_BIN) \
-		$(NEX_BIN)
+system: $(NEX_BIN)
 
 run:
-	$(Z80_TIC) $(Z80_TIC_FLAGS)
+	$(Z88DKTIC) $(Z88DKTICFLAGS) $(NEX_BIN)
+
+dis-asm:
+	$(Z88DKDIS) $(Z88DKDISFLAGS) $(NEX_BIN)
 
 clean:
 	$(RM) $(OBJECT) $(NEX_FIRM) $(NEX_BOOT) $(NEX_KERN) $(NEX_USER) $(NEX_BIN)
@@ -87,14 +86,10 @@ clean:
 # *** Generate file ***
 # *********************
 
-$(NEX_BIN):	$(OBJECT)
+$(NEX_BIN):	$(NEX_SRC) $(SOURCE) $(HEADER)
 	@mkdir -p $(dir $@)
-	$(Z88DKASM) $(Z88DKASMFLAGS) -b $^ -o$@
+	$(Z88DKASM) $(Z88DKASMFLAGS) -o$@ -b $<
 
 # ***************
 # *** Patrons ***
 # ***************
-
-$(OBJ_PATH)/%.o: $(SRC_PATH)/%.asm
-	@mkdir -p $(dir $@)
-	$(Z88DKASM) $(Z88DKASMFLAGS) -d $< -o$@

@@ -10,9 +10,27 @@
 ;; *** Avoid file re-definitions ***
 ;; *********************************
 
-IFNDEF __BOOT_INC__
-__BOOT_INC__ equ 1
+IFNDEF __ISC_INC__
+__ISC_INC__ equ 1
 
-EXTERN		boot
+macro pushall
+	push	af
+	push	bc
+	push	de
+	push	hl
+	push	ix
+	push	iy
+	push	sp
+endm
+
+macro popall
+	pop		af
+	pop		bc
+	pop		de
+	pop		hl
+	pop		ix
+	pop		iy
+	pop		sp
+endm
 
 ENDIF

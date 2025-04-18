@@ -61,6 +61,6 @@ else ifeq ($(TARGET),CPC-6128)
 
 else ifeq ($(TARGET),MICRO-ENOSIS)
 
-	include mak/z80/enosis.mak
+	include mak/z180/enosis.mak
 
 endif

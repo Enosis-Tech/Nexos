@@ -2,7 +2,7 @@
 
 ;; ****************************
 ;; *** @author: Έnosis Tech	***
-;; *** @file: graphics.inc	***
+;; *** @file: idt.inc		***
 ;; *** @date: 16/04/2025	***
 ;; ****************************
 
@@ -10,12 +10,10 @@
 ;; *** Avoid file re-definitions ***
 ;; *********************************
 
-IFNDEF __GRAPHICS_INC__
-__GRAPHICS_INC__ equ 1
+IFNDEF __BOOT_INC__
+__BOOT_INC__ equ 1
 
-EXTERN		VIDEO_MODE_ZERO
-EXTERN		VIDEO_MODE_ONE
-EXTERN		VIDEO_MODE_TWO
-EXTERN		VIDEO_MODE_THREE
+
+
 
 ENDIF

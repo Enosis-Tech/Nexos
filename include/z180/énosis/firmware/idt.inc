@@ -10,8 +10,8 @@
 ;; *** Avoid file re-definitions ***
 ;; *********************************
 
-IFNDEF __ISC_INC__
-__ISC_INC__ equ 1
+IFNDEF __IDT_INC__
+__IDT_INC__ equ 1
 
 
 ENDIF
