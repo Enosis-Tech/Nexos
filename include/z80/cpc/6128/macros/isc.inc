@@ -4,15 +4,15 @@ __ISC_INC__ = 1
 
 MACRO int number
 
-	if number == #10
+    if number == #10
 
-		rst		#10
+        rst     #10
 
-	else
+    else
 
-		call	number * #10
+        call    number * #10
 
-	Endif
+    Endif
 
 ENDM
 

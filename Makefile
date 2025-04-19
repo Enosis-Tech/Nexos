@@ -1,5 +1,11 @@
 # SPDX-License: GPL-2
 
+# ****************************
+# *** @author: Έnosis Tech ***
+# *** @file: Makefile     ***
+# *** @date: 19/04/2025    ***
+# ****************************
+
 # Set shell
 
 SHELL := /bin/sh

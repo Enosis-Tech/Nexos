@@ -1,3 +1,13 @@
+/* SPDX-License: GPL-2 */
+
+/*
+****************************
+*** @author: Έnosis Tech ***
+*** @file: 8086.ld      ***
+*** @date: 19/04/2025    ***
+****************************
+*/
+
 /* Define entry boot */
 ENTRY(main_nexos)
 

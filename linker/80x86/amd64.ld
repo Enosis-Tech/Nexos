@@ -1,3 +1,13 @@
+/* SPDX-License: GPL-2 */
+
+/*
+****************************
+*** @author: Έnosis Tech ***
+*** @file: amd64.ld      ***
+*** @date: 19/04/2025    ***
+****************************
+*/
+
 /* Define OUTPUT_FORMAT */
 
 OUTPUT_FORMAT(elf64-x86-64)

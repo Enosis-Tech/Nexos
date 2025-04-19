@@ -1,3 +1,13 @@
+/* SPDX-License: GPL-2 */
+
+/*
+****************************
+*** @author: Έnosis Tech ***
+*** @file: i386.ld      ***
+*** @date: 19/04/2025    ***
+****************************
+*/
+
 /* Define OUTPUT_FORMAT */
 OUTPUT_FORMAT(elf32-i386)
 
