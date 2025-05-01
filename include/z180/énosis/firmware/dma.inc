@@ -2,7 +2,7 @@
 
 ;; ****************************
 ;; *** @author: Έnosis Tech	***
-;; *** @file: isc.inc		***
+;; *** @file: dma.inc		***
 ;; *** @date: 16/04/2025	***
 ;; ****************************
 
@@ -10,27 +10,11 @@
 ;; *** Avoid file re-definitions ***
 ;; *********************************
 
-IFNDEF __ISC_INC__
-__ISC_INC__ equ 1
+IFNDEF __DMA_INC__
+__DMA_INC__ equ 1
 
-macro pushall
-	push	af
-	push	bc
-	push	de
-	push	hl
-	push	ix
-	push	iy
-	push	sp
-endm
-
-macro popall
-	pop		af
-	pop		bc
-	pop		de
-	pop		hl
-	pop		ix
-	pop		iy
-	pop		sp
-endm
+STD_DMA_CBR		equ $38
+STD_DMA_BBR		equ $39
+STD_DMA_CBAR	equ $3A
 
 ENDIF

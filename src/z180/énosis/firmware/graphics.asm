@@ -43,3 +43,10 @@ video_mode_three:
     ld      bc, $BC00
     out     (c), c
     ret
+
+video_write_service:
+    pop     hl
+
+    ld      bc, $BC00
+    out     (c), c
+    ret

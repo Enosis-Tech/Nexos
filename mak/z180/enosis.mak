@@ -54,7 +54,7 @@ Z88DKAPP := z88dk.z88dk-appmake
 # *******************
 
 Z88DKASMFLAGS := -m=z180 -r0000 -float=ieee16 -I=$(SRC_PATH) -I=$(HDR_PATH)
-Z88DKDISFLAGS := -mz180
+Z88DKDISFLAGS := -mz180 -a
 Z88DKTICFLAGS := 
 Z88DKAPPFLAGS := +hex
 
@@ -70,8 +70,20 @@ system: $(NEX_BIN)
 run:
 	$(Z88DKTIC) $(Z88DKTICFLAGS) $(NEX_BIN)
 
-dis-asm:
+dis:
 	$(Z88DKDIS) $(Z88DKDISFLAGS) $(NEX_BIN)
+
+dis-firm:
+	$(Z88DKDIS) $(Z88DKDISFLAGS) 0x0000-0x7FFF $(NEX_BIN)
+
+dis-boot:
+	$(Z88DKDIS) $(Z88DKDISFLAGS) 0x0000-0x7FFF $(NEX_BIN)
+
+dis-kern:
+	$(Z88DKDIS) $(Z88DKDISFLAGS) 0x0000-0x7FFF $(NEX_BIN)
+
+dis-user:
+	$(Z88DKDIS) $(Z88DKDISFLAGS) 0x0000-0x7FFF $(NEX_BIN)
 
 clean:
 	$(RM) $(OBJECT) $(NEX_FIRM) $(NEX_BOOT) $(NEX_KERN) $(NEX_USER) $(NEX_BIN)

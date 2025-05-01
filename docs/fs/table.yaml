@@ -1,0 +1,59 @@
+Read only:
+
+  Security:
+    - Version ID:
+        Size: 2
+        Format: xxxx
+
+    - Digital firm:
+        Size: 2
+        Value: 0xF5E5
+
+    - Table extend:
+        Size: 1
+        Value: [0, 1]
+        Comment: 0 = obligatorio, 1 = extendido
+
+    - Table size:
+        Formula: end_table - start_table
+
+  Memory information:
+    - Name:
+        Size: 2
+        High: 0x3C
+        Low:  0x01
+
+    - Cluster:
+        Size: 512
+
+    - File size:
+        Max: 0xFFFFFFFF
+
+    - Node limit:
+        Min: 0x0000
+        Max: 0xFFFF
+
+Read and Write:
+
+  Security:
+    - Type:
+        Size: 2
+        Byte 1: Modo (Kernel/User)
+        Byte 2: Permisos y flags
+
+    - ID:
+        File:
+          Size: 2
+        Folder:
+          Size: 2
+  Buffers:
+
+    Limits:
+      File:
+        Name: 52
+        Ext:  8
+        Size: 4
+
+      Folder:
+        Name: 60
+        Size: 4

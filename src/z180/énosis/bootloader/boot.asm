@@ -12,9 +12,9 @@
 
 include     "firmware/idt.inc"
 
-;; ******************************
+;; ******************
 ;; *** Bootloader ***
-;; ******************************
+;; ******************
 
 boot:
     xor     A       ;; Seleccionar la configuración

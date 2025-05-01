@@ -6,12 +6,6 @@
 ;; *** @date: 16/04/2025    ***
 ;; ****************************
 
-;; **********************
-;; *** Origin address ***
-;; **********************
-
-org         $0000
-
 ;; ********************
 ;; *** Import files ***
 ;; ********************
@@ -24,16 +18,32 @@ include     "bootloader/boot.inc"
 ;; *** Load secure bootloader ***
 ;; ******************************
 
-start_system:
+start_firm:
     
-    xor     a
-    ld      bc, $0000
-    ld      de, $0000
-    ld      hl, $0000
-    ld      sp, $BFFF
-    jp      load_ram_firmware
+    di              ;; Disable interruptions
+    xor     a       ;; Clear a register (a = 0)
+    
+    ;; Clear registers hl, bc and de
 
-limit_rst_00: defs  $10 - ($ - $00) ;; Space limit of rst $00
+    ld      b, a
+    ld      c, a
+    
+    ld      d, a
+    ld      e, a
+    
+    ld      h, a
+    ld      l, a
+    
+    ;; Secure load system
+
+    ld      a, $3A  ;; A = #3A
+    cp      $3A     ;; Set flags
+
+    jp      z, boot ;;  Jump if A == #3A, is secure
+
+    xor     a   ;; Secure execution of #10 memory address
+
+limit_rst_00: defs  $10 - ($ - start_firm) ;; Space limit of rst $00
 
 ;; *******************
 ;; *** RST Service ***
@@ -44,17 +54,17 @@ limit_rst_00: defs  $10 - ($ - $00) ;; Space limit of rst $00
 
 bios_service:
 
-    cp      $0A     ;; Set flags
+    cp      $14     ;; Set flags
     ret     m       ;; If the sign is set, it is an error
     ret     nc      ;; If A > 10, it is an error
     ret     nz      ;; If A != 0, it is an error
     
-    jp      idt_find_service ;; Jump to the subrutine of search
+    jr      idt_find_service ;; Jump to the subrutine of search
 
-limit_rst_10: defs  $08 - ($ - $10) ;; Space limit of rst $10
+limit_rst_10: defs  $08 - ($ - bios_service) ;; Space limit of rst $10
 
 ;; *******************
 ;; *** Limit space ***
 ;; *******************
 
-limit_service: defs $48 - ($ - $00)
+limit_service: defs $48 - ($ - start_firm)
