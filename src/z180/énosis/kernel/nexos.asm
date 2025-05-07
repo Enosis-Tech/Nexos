@@ -1,9 +1,8 @@
 ;; SPDX-License
 
 ;; ****************************
-;; *** @author: Έnosis Tech ***
-;; *** @file: nexos.asm     ***
-;; *** @date: 16/04/2025    ***
+;; *** @author Έnosis Tech  ***
+;; *** @version 00.00.04 	***
 ;; ****************************
 
 ;; ********************
@@ -17,10 +16,6 @@ include		"macros/calc.inc"
 ;; *** Kernel services ***
 ;; ***********************
 
-nexos_service:
-
-;; limit_space $28, $7FFF
-
 syscall_service:
 	cp 		 a
 	ret 	 m
@@ -29,8 +24,14 @@ syscall_service:
 
 	jp		nexos_find_service
 
+limit_space $40, $00
 
-;; limit_space $40, $7FFF
+;; ****************************
+;; *** Interrupt data tabla ***
+;; ****************************
+
+nexos_idt:
+	ret
 
 ;; *********************
 ;; *** Find services ***
@@ -40,43 +41,42 @@ nexos_find_service:
 	push	hl
 
 	add		a
-	ld		hl, (nexos_idt - nexos_find_service) + $28
+	ld		hl, nexos_idt
 	
 	add		l
 	ld		l, a
 	
 	jp		(hl)
 
-;; ***************************
-;; *** Iterrupt Data Table ***
-;; ***************************
+;; *************************
+;; *** System Data Table ***
+;; *************************
 
-nexos_idt:
+nexos_sdt:
 
 	;; unistd process
 
-	sysaddr $00, $3C
-	sysaddr $01, $3C
-	sysaddr $02, $3C
-	sysaddr $03, $3C
-	sysaddr $04, $3C
+	defw	fork
+	defw	exec
+	defw	exit
+	defw	wait
 
 	;; unistd memory
 
-	sysaddr $05, $3C
-	sysaddr $06, $3C
+	defw	brk
+	defw	mmap
 
 	;; signals
 
-	sysaddr $07, $3C
-	sysaddr $08, $3C
-	sysaddr $09, $3C
-	sysaddr $0A, $3C
+	defw	kill
+	defw	sigaction
+	defw	sigprocmask
+	defw	sigsuspend
 
 	;; time
 
-	sysaddr $0B, $3C
-	sysaddr $0C, $3C
+	defw	time
+	defw	tzset
 
 ;; *******************
 ;; *** Kernel main ***

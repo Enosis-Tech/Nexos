@@ -1,9 +1,8 @@
 ;; SPDX-License: GPL-2
 
 ;; ****************************
-;; *** @author: Έnosis Tech ***
-;; *** @file:   service.asm ***
-;; *** @date: 16/04/2025    ***
+;; *** @author Έnosis Tech  ***
+;; *** @version 00.00.02    ***
 ;; ****************************
 
 ;; ********************
@@ -39,7 +38,7 @@ start_firm:
     ld      a, $3A  ;; A = #3A
     cp      $3A     ;; Set flags
 
-    jp      z, boot ;;  Jump if A == #3A, is secure
+    jp      z, $2000 ;;  Jump if A == #3A, is secure
 
     xor     a   ;; Secure execution of #10 memory address
 
