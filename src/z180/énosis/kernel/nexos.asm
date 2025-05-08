@@ -2,27 +2,27 @@
 
 ;; ****************************
 ;; *** @author Έnosis Tech  ***
-;; *** @version 00.00.04 	***
+;; *** @version 00.00.04    ***
 ;; ****************************
 
 ;; ********************
 ;; *** Import files ***
 ;; ********************
 
-include		"macros/isc.inc"
-include		"macros/calc.inc"
+include     "macros/isc.inc"
+include     "macros/calc.inc"
 
 ;; ***********************
 ;; *** Kernel services ***
 ;; ***********************
 
 syscall_service:
-	cp 		 a
-	ret 	 m
-	ret 	nc
-	ret 	nz
+    cp       a
+    ret      m
+    ret     nc
+    ret     nz
 
-	jp		nexos_find_service
+    jp      nexos_find_service
 
 limit_space $40, $00
 
@@ -31,22 +31,22 @@ limit_space $40, $00
 ;; ****************************
 
 nexos_idt:
-	ret
+    ret
 
 ;; *********************
 ;; *** Find services ***
 ;; *********************
 
 nexos_find_service:
-	push	hl
+    push    hl
 
-	add		a
-	ld		hl, nexos_idt
-	
-	add		l
-	ld		l, a
-	
-	jp		(hl)
+    add     a
+    ld      hl, nexos_idt
+    
+    add     l
+    ld      l, a
+    
+    jp      (hl)
 
 ;; *************************
 ;; *** System Data Table ***
@@ -54,33 +54,33 @@ nexos_find_service:
 
 nexos_sdt:
 
-	;; unistd process
+    ;; unistd process
 
-	defw	fork
-	defw	exec
-	defw	exit
-	defw	wait
+    defw    fork
+    defw    exec
+    defw    exit
+    defw    wait
 
-	;; unistd memory
+    ;; unistd memory
 
-	defw	brk
-	defw	mmap
+    defw    brk
+    defw    mmap
 
-	;; signals
+    ;; signals
 
-	defw	kill
-	defw	sigaction
-	defw	sigprocmask
-	defw	sigsuspend
+    defw    kill
+    defw    sigaction
+    defw    sigprocmask
+    defw    sigsuspend
 
-	;; time
+    ;; time
 
-	defw	time
-	defw	tzset
+    defw    time
+    defw    tzset
 
 ;; *******************
 ;; *** Kernel main ***
 ;; *******************
 
 nexos_main:
-	ret
+    ret

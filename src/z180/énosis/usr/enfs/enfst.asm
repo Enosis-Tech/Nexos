@@ -32,7 +32,7 @@ ENFS_TABLE_SIZE:		defb	TABLE_SIZE		;; Tamaño de la tabla
 ENFS_NAME_MIN:			defb	NAME_SIZE_MIN	;; Tamaño mínimo de carácteres en el nombre
 ENFS_NAME_MAX:			defb	NAME_SIZE_MAX	;; Tamaño máximo de carácteres en el nombre
 ENFS_CLUSTER:			defw	CLUSTER_SIZE	;; Tamaño de los clusters
-ENFS_SIZE_FILE:			defw	SIZE_FILE		;; Tamaño máximo de un archivo (teórico)
+ENFS_SIZE_FILE:			defp	SIZE_FILE		;; Tamaño máximo de un archivo (teórico)
 ENFS_LIMIT_NODES_MIN:	defW	LIMIT_NODES_MIN	;; Límite mínumo de nodos
 ENFS_LIMIT_NODES_MAX:	defw	LIMIT_NODES_MAX	;; Límite máximo de nodos
 
@@ -40,7 +40,7 @@ ENFS_LIMIT_NODES_MAX:	defw	LIMIT_NODES_MAX	;; Límite máximo de nodos
 
 	;; Información de seguridad
 
-ENFS_TYPE:				defs	TYPE		;; Indica el tipo de archivo
+ENFS_TYPE:				defs	FILE_TYPE	;; Indica el tipo de archivo
 ENFS_FILE_ID:			defs	FILE_ID		;; ID de el archivo
 ENFS_FOLDER_ID:			defs	FOLDER_ID	;; ID de la carpeta
 

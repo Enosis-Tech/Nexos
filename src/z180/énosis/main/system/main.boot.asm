@@ -11,10 +11,16 @@
 
 org         $2000
 
+;; ************************
+;; *** Import libraries ***
+;; ************************
+
+include		"macros/calc.inc"
+
 ;; ******************
 ;; *** Bootloader ***
 ;; ******************
 
 include     "bootloader/boot.asm"
 
-limit_bootloader: defs $2000 - ($ - $2000)
+limit_space $2000, $2000

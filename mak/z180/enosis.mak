@@ -11,34 +11,42 @@
 
 SRC_PATH := src/z180/énosis
 HDR_PATH := include/z180/énosis
-IHX_PATH := build/bin/z180/enosis/ihx
+IHX_PATH := build/bin/z180/énosis/ihx
 BIN_PATH := build/bin/z180/énosis/bin
+
+SRC_SYS_PATH := $(SRC_PATH)/main/system
+BIN_SYS_PATH := $(BIN_PATH)/system
+IHX_SYS_PATH := $(IHX_PATH)/system
+
+SRC_USR_PATH := $(SRC_PATH)/main/user
+BIN_USR_PATH := $(BIN_PATH)/user
+IHX_USR_PATH := $(IHX_PATH)/user
 
 # ****************************
 # *** Special system files ***
 # ****************************
 
-NEX_SRC_FIRM := $(SRC_PATH)/main/main.firm.asm
-NEX_SRC_BOOT := $(SRC_PATH)/main/main.boot.asm
-NEX_SRC_KERN := $(SRC_PATH)/main/main.kern.asm
+NEX_SRC_FIRM := $(SRC_SYS_PATH)/main.firm.asm
+NEX_SRC_BOOT := $(SRC_SYS_PATH)/main.boot.asm
+NEX_SRC_KERN := $(SRC_SYS_PATH)/main.kern.asm
 
-NEX_BIN_FIRM := $(BIN_PATH)/enosis-firm.bin
-NEX_BIN_BOOT := $(BIN_PATH)/enosis-boot.bin
-NEX_BIN_KERN := $(BIN_PATH)/enosis-nexos.bin
+NEX_BIN_FIRM := $(BIN_SYS_PATH)/enosis-firm.bin
+NEX_BIN_BOOT := $(BIN_SYS_PATH)/enosis-boot.bin
+NEX_BIN_KERN := $(BIN_SYS_PATH)/enosis-nexos.bin
 
-NEX_IHX_FIRM := $(IHX_PATH)/enosis-firm.ihx
-NEX_IHX_BOOT := $(IHX_PATH)/enosis-boot.ihx
-NEX_IHX_KERN := $(IHX_PATH)/enosis-kern.ihx
+NEX_IHX_FIRM := $(IHX_SYS_PATH)/enosis-firm.ihx
+NEX_IHX_BOOT := $(IHX_SYS_PATH)/enosis-boot.ihx
+NEX_IHX_KERN := $(IHX_SYS_PATH)/enosis-kern.ihx
 
 # **************************
 # *** Special user files ***
 # **************************
 
-NEX_SRC_ENFS := $(SRC_PATH)/main/main.enfs.asm
+NEX_SRC_ENFS := $(SRC_USR_PATH)/fs/main.enfs.asm
 
-NEX_BIN_ENFS := $(BIN_PATH)/enosis-enfs.bin
+NEX_BIN_ENFS := $(BIN_USR_PATH)/fs/enosis-enfs.bin
 
-NEX_IHX_ENFS := $(IHX_PATH)/enosis-enfs.ihx
+NEX_IHX_ENFS := $(IHX_USR_PATH)/fs/enosis-enfs.ihx
 
 # **********************
 # *** Important data ***
@@ -72,6 +80,8 @@ SOURCE_ENFS := $(shell find $(SRC_PATH)/usr/enfs -type f -name '*.asm')
 
 # Header files
 
+HEADER_ENFS := $(shell find $(HDR_PATH)/usr/enfs -type f -name '*.inc')
+
 # *************
 # *** Tools ***
 # *************
@@ -98,6 +108,9 @@ Z88DKAPPFLAGS := +hex -w -r 16
 
 all:	$(NEX_BIN_FIRM) $(NEX_BIN_BOOT) $(NEX_BIN_KERN) \
 		$(NEX_IHX_FIRM) $(NEX_IHX_BOOT) $(NEX_IHX_KERN) \
+		\
+		$(NEX_BIN_ENFS) \
+		$(NEX_IHX_ENFS)
 
 # *** Running ***
 
@@ -126,6 +139,9 @@ dis-kern: $(NEX_BIN_KERN)
 clean:
 	$(RM) 	$(NEX_BIN_FIRM) $(NEX_BIN_BOOT) $(NEX_BIN_KERN) \
 			$(NEX_IHX_FIRM) $(NEX_IHX_BOOT) $(NEX_IHX_KERN) \
+			\
+			$(NEX_BIN_ENFS) \
+			$(NEX_IHX_ENFS)
 
 # ********************
 # *** .PHONY rules ***
@@ -165,6 +181,16 @@ $(NEX_IHX_KERN): $(NEX_BIN_KERN)
 	@mkdir -p $(dir $@)
 	$(Z88DKAPP) $(Z88DKAPPFLAGS) --binfile $< -o $@ --org 0x4000
 
-# ***************
-# *** Patrons ***
-# ***************
+# ****************************
+# *** Generate system file ***
+# ****************************
+
+$(NEX_BIN_ENFS): $(NEX_SRC_ENFS) $(SOURCE_ENFS) $(HEADER_ENFS)
+	@mkdir -p $(dir $@)
+	$(Z88DKASM) $(Z88DKASMFLAGS) -o$@ -b $<
+
+# Format: Intel hex
+
+$(NEX_IHX_ENFS): $(NEX_BIN_ENFS)
+	@mkdir -p $(dir $@)
+	$(Z88DKAPP) $(Z88DKAPPFLAGS) --binfile $< -o $@ --org 0x8000

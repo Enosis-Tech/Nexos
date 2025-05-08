@@ -1,15 +1,15 @@
 ;; SPDX-License: GPL-2
 
 ;; ****************************
-;; *** @author Έnosis Tech	***
-;; *** @version 00.00.01 	***
+;; *** @author Έnosis Tech  ***
+;; *** @version 00.00.01    ***
 ;; ****************************
 
 ;; ********************
 ;; *** Import files ***
 ;; ********************
 
-include		"kernel/signal.inc"
+include     "kernel/signal.inc"
 
 ;; ***************************
 ;; *** Send signal for the ***
@@ -17,25 +17,25 @@ include		"kernel/signal.inc"
 ;; ***************************
 
 kill:
-	ret
+    ret
 
 ;;
 ;;
 ;;
 
 sigaction:
-	ret
+    ret
 
 ;;
 ;;
 ;;
 
 sigprocmask:
-	ret
+    ret
 
 ;;
 ;;
 ;;
 
 sigsuspend:
-	ret
+    ret
