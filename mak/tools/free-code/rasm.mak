@@ -19,35 +19,15 @@ SIT_PATH := script/z80/install
 
 RASM := git@github.com:EdouardBERGE/rasm.git
 
-# *************
-# *** Tools ***
-# *************
-
-RM  := rm -rf
-GIT := git
-
-# *******************
-# *** Tools flags ***
-# *******************
-
-GITFLAGS := clone
-MAKEFLAGS := -C rasm -j$(nproc)
-
 # Rules
 
-all: directory clone compiling
+all:
+	mkdir -p $(LIB_PATH)
+	git clone $(RASM)
+	make -C rasm -j$(shell nproc)
+	mv rasm/rasm.exe $(LIB_PATH)/rasm
+	rm -rf rasm
 
 stable: $(SIT_PATH)/rasm.sh
 	@chmod +x $<
 	./$<
-
-directory:
-	mkdir -p $(LIB_PATH)
-
-clone:
-	$(GIT) $(GITFLAGS) $(RASM)
-
-compiling:
-	$(MAKE) $(MAKEFLAGS)
-	mv rasm/rasm.exe $(LIB_PATH)/rasm
-	$(RM) rasm

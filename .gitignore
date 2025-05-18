@@ -14,3 +14,4 @@ lib/bin
 lib/binutils
 build/iso/80x86/8086
 build/bin
+build/objects

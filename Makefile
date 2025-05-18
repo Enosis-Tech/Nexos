@@ -102,7 +102,7 @@ ifeq ($(ARCH), z80)
 
 		ifeq ($(PC), cpc_6128)
 		
-			include mak/z80/cpc_6128.mak
+			include mak/z80/z80/cpc/cpc_6128.mak
 		
 		endif # cpc family
 	
@@ -116,7 +116,7 @@ ifeq ($(ARCH), z80)
 
 		ifeq ($(PC), enosis)
 			
-			include mak/z180/enosis.mak
+			include mak/z80/z180/enosis.mak
 			
 		endif # Έnosis family
 
