@@ -51,38 +51,39 @@ void* ptr_heap_nodo = &heap_nodo[0];
 // *** Funciones ***
 // *****************
 
-void* brk() {
+block_t *solicitar_espacio(uint16_t size) {
+    block_t *block = (block_t *)sbrk(0);
     
 }
 
-void* malloc(uint16_t size) {
+// void* malloc(uint16_t size) {
     
-    if (ptr_heap_nodo == 0x0000)    goto error;
-    if (size == 0)                  goto nuller;
-    if (size > MAX_SIZE_HEAP)       goto nuller;
+//     if (ptr_heap_nodo == 0x0000)    goto error;
+//     if (size == 0)                  goto nuller;
+//     if (size > MAX_SIZE_HEAP)       goto nuller;
     
-    block_t* prev    = NULL;
-    nodo_t* current = crear_nodo(size);
+//     block_t* prev    = NULL;
+//     nodo_t* current = crear_nodo(size);
     
-    current -> 
+//     current -> 
     
-    if (current -> is_free) {
+//     if (current -> is_free) {
         
-        prev = current;
+//         prev = current;
         
-        current = NULL;
-    }
+//         current = NULL;
+//     }
     
-    prev -> is_free = 0x00;
+//     prev -> is_free = 0x00;
     
-    return prev;
+//     return prev;
     
-    error:
-        return 0xFFFF;
+//     error:
+//         return 0xFFFF;
     
-    nuller:
-        return NULL;
-}
+//     nuller:
+//         return NULL;
+// }
 
 nodo_t* crear_nodo(uint16_t size) {
     
