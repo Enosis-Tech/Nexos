@@ -53,6 +53,7 @@ void* ptr_heap_nodo = &heap_nodo[0];
 // *** Funciones ***
 // *****************
 
+// Función para solicitar espacio en el heap cuando on hay
 block_t *solicitar_espacio(uint16_t size) {
     block_t *block = (block_t *)sbrk(0); // Obteer el puntero actual del break
     void *respuesta = sbrk(size + MAX_SIZE_HEAP); // Solicitamos más memoria el sistema
