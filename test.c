@@ -12,7 +12,8 @@
 
 // Aliases
 
-typedef unsigned char bool typedef unsigned short size_t;
+typedef unsigned char bool;
+typedef unsigned short size_t;
 typedef void *uniptr_t;
 
 // *******************
