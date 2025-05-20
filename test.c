@@ -102,6 +102,7 @@ block_t *solicitar_espacio(uint16_t size) {
     return (void *)-1 // Error 
   }
 
+  /*Código del Eduardo :v*/
   // void* malloc(uint16_t size) {
 
   //     if (ptr_heap_nodo == 0x0000)    goto error;
