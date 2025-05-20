@@ -1,5 +1,6 @@
 // Macros
 
+#include <time.h>
 #define true 1
 #define false 0
 
@@ -21,6 +22,7 @@ typedef void*           uniptr_t;
 typedef struct {
     
     bool    free;
+    struct block_t* next;
     size_t  size;
     
 } block_t;
@@ -52,8 +54,15 @@ void* ptr_heap_nodo = &heap_nodo[0];
 // *****************
 
 block_t *solicitar_espacio(uint16_t size) {
-    block_t *block = (block_t *)sbrk(0);
+    block_t *block = (block_t *)sbrk(0); // Obteer el puntero actual del break
+    void *respuesta = sbrk(size + MAX_SIZE_HEAP); // Solicitamos más memoria el sistema
+
+    if (respuesta == (void *) -1) {return NULL; // Sbrk falló}
     
+    block -> size = size;
+    block -> next = NULL;
+    block -> free = 0x00;
+    return block;
 }
 
 // void* malloc(uint16_t size) {
