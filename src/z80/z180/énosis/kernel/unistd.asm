@@ -48,13 +48,14 @@ fork:
 ;; Establecer estado del proceso
     
     inc     hl      ;; hl = hl + 1 -> puntero al estado
-    inc     (hl)    ;; Lo establecemos como activo
+    ld       a, $01 ;; A = 1 -> Active process
+    ld     (hl), a  ;; Lo establecemos como activo
 
 ;; Nos desplazamos al siguiente elemento del arreglo
     
-    ld      de, $0025   ;; Establecemos el valor del registro
-                        ;; DE a 0x25 debido aque cada índice
-                        ;; del arreglo pesa eso
+    ld      de, $0024   ;; Establecemos DE en 0x24 porque ya nos desplazamos
+                        ;; un byte previamente (con inc hl) y cada bloque ocupa
+                        ;; 0x25 bytes en total
 
     add     hl, de      ;; Nos desplazamos en el arreglo
 
@@ -75,14 +76,15 @@ fork_end:
     ret ;; Finalización de la ejecución de fork
 
 fork_error:
-    ld      a, $FF
-    ret
+    ld      a, $FF  ;; A = -1 -> Indica error
+    ret             ;; Finalización de la ejecución de fork
 
 ;; *************************
 ;; *** Execute a process ***
 ;; *************************
 
 exec:
+    ;; TODO: Implementar ejecución de binarios
     ret
 
 ;; ****************************
@@ -91,8 +93,8 @@ exec:
 
 exit:
     ld      hl, (fnp) ;; Obtener el puntero al proceso actual
-    ld      de, $FFEC ;; -0x0014
-    add     hl, de    ;; Actual - 0x0024 = anterior + 1
+    ld      de, PSIZE ;; Process size
+    add     hl, de    ;; Actual - PSIZE = anterior + 1
 
     xor     a       ;; Igualamos el registro a, a cero
     ld      (hl), a ;; estado = 0
@@ -132,8 +134,112 @@ getpid:
 ;; ************************************
 
 brk:
+    push    bc
+    pop     bc
     ret
 
+;; **************************************
+;; *** Implementation of the freelist ***
+;; ***      algorithm allocator       ***
+;; **************************************
+
+;; mblock* mblk_create(size_t n)
+
+mblk_init:
+    
+    ;; Init values
+    xor     a
+    ld      de, $2000
+    ld      hl, freelist
+    
+    ;; Size
+
+    ld      (hl), e
+    
+    inc     hl
+    ld      (hl), d
+
+    ;; Next
+
+    inc     hl
+    ld      (hl), a
+
+    inc     hl
+    ld      (hl), a
+
+    ret
+
+fla_malloc:
+    push    bc
+    push    iy
+    ld      iy, $FFF9
+    add     iy, sp
+    ld      sp, iy
+
+    ;; de = size and hl is free
+
+    ex      de, hl
+
+    ;; Prev = null
+
+    xor     a
+
+    ld      (iy + 0), a
+    ld      (iy + 1), a
+
+    ;; curr = freelist
+
+    ld      hl, (freelist)
+
+    ld      (iy + 2), l
+    ld      (iy + 3), h
+
+    ;; total_size = size + 4
+
+    ld      hl, $0004 ;; hl = 4
+    add     hl, de    ;; hl = hl + size -> tsize = 4 + size
+
+    ld      (iy + 4), l ;; save low
+    ld      (iy + 5), h ;; save high
+
+    ex      de, hl ;; de = total_size
+
+fla_malloc_loop:
+
+    ld      a, (iy + 3)
+    cp      $00
+    jr      z, fla_malloc_end
+
+    ld      a, e
+    cp      (iy + 2)
+    jp      z, fla_malloc_is_curr_equal_tsize
+
+fla_malloc_loop_continue:
+
+    ld      a
+
+    jp      fla_malloc_loop
+
+fla_malloc_end:
+
+    ld      iy, $0007
+    add     iy, sp
+    ld      sp, iy
+    pop     iy
+    pop     bc
+    ret
+
+fla_malloc_is_curr_equal_tsize:
+    ld      a, d
+    cp      (iy + 3)
+    jp      nz, fla_malloc_loop_continue
+
+
+fla_sub:
+    ret
+
+fla_find:
+    ret
 
 ;; *****************************************
 ;; *** Implementation of the round robin ***
@@ -143,7 +249,7 @@ brk:
 rr_priority:
     ret
 
-rr_save_contex:
+rr_save_context:
     ret
 
 ;; Level priority 0
@@ -186,6 +292,12 @@ section _DATA
 
 free_next_process: defw plist
 
+;; Free list
+
+freelist: defw $DFFF
+
+fla_ptr: defw fla_nodes
+
 ;; Quantums times
 
 qt:
@@ -205,6 +317,20 @@ cproc: defb $00
 ;; *******************
 
 section _BSS
+
+;; Pointers
+
+fla_prev:
+    defs $02
+
+fla_curr:
+    defs $02
+
+fla_tsize:
+    defs $02
+
+fla_nodes:
+    defs $64 * $04 ;; 400 bytes
 
 ;; Process list
 

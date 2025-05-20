@@ -12,6 +12,19 @@
 ifndef __STRUCTS_INC__
 define __STRUCTS_INC__
 
+include		"unistd.inc"
+
+macro nblock name
+	if name = 0
+		size_t	$00 ;; Reserve size for block
+		defw 	$00	;; struct mblock* next
+	else
+		name:
+			size_t	$00 ;; Reserve size for block
+			defw 	$00	;; struct mblock* next
+	endif
+endm
+
 macro PCB name
 	name:
 		defb $00	;; PID
