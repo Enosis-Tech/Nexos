@@ -30,96 +30,16 @@ else ifeq ($(TOOL), winape)
 
 endif
 
-# ***********************************
-# *** Compiling from 80x80 family ***
-# ***********************************
+# *****************
+# *** Compiling ***
+# *****************
 
-ifeq ($(ARCH), x86)
+ifdef HOST
 
-	ifeq ($(TARGET), 8086)
+include mak/$(ARCH)/$(TARGET)/$(HOST).mak
 
-		include mak/80x86/8086.mak
-	
-	else ifeq ($(TARGET), x86-32)
-	
-		include mak/80x86/i386.mak
-	
-	else ifeq ($(TARGET), x86-64)
-	
-		include mak/80x86/amd64.mak
-	
-	endif
+else
+
+include mak/$(ARCH)/$(TARGET).mak
 
 endif
-
-# ***********************************
-# *** Compiling from ARM family ***
-# ***********************************
-
-ifeq ($(ARCH), arm)
-
-	ifeq ($(TARGET), aarch32)
-
-		include mak/arm/aarch32.mak
-
-	else ifeq ($(TARGET), aarch64)
-
-		include mak/arm/aarch64.mak
-
-	endif
-
-endif
-
-# ***********************************
-# *** Compiling from ARM family ***
-# ***********************************
-
-ifeq ($(ARCH), riscv)
-
-	ifeq ($(TARGET), riscv32)
-
-		include mak/riscv/riscv32.mak
-
-	else ifeq ($(TARGET), riscv64)
-
-		include mak/riscv/riscv64.mak
-
-	endif
-
-endif
-
-# ***********************************
-# *** Compiling from ARM family ***
-# ***********************************
-
-ifeq ($(ARCH), z80)
-
-	# *** Z80 cpu ***
-
-	ifeq ($(TARGET), z80)
-
-		# *** cpc family ***
-
-		ifeq ($(PC), cpc_6128)
-		
-			include mak/z80/z80/cpc/cpc_6128.mak
-		
-		endif # cpc family
-	
-	endif # Z80 target
-
-	# *** Z180 cpu ***
-
-	ifeq ($(TARGET), z180)
-		
-		# *** Έnosis family ***
-
-		ifeq ($(PC), enosis)
-			
-			include mak/z80/z180/enosis.mak
-			
-		endif # Έnosis family
-
-	endif # Z180 target
-
-endif # ARCH
