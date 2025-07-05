@@ -53,7 +53,7 @@ fork:
 
 ;; Nos desplazamos al siguiente elemento del arreglo
     
-    ld      de, $0024   ;; Establecemos DE en 0x24 porque ya nos desplazamos
+    ld      de, 0024   ;; Establecemos DE en 0x24 porque ya nos desplazamos
                         ;; un byte previamente (con inc hl) y cada bloque ocupa
                         ;; 0x25 bytes en total
 
@@ -148,7 +148,7 @@ brk:
 mblk_init:
     
     ;; Init values
-    xor     a
+    xor      a
     ld      de, $2000
     ld      hl, freelist
     
@@ -288,15 +288,23 @@ rr_lp5:
 
 section _DATA
 
+;; Counter process
+
+cproc:
+    defb $00
+
 ;; It has an alias called fnp to simplify programming.
 
-free_next_process: defw plist
+free_next_process:
+    defw plist
 
 ;; Free list
 
-freelist: defw $DFFF
+freelist:
+    defw $DFFF
 
-fla_ptr: defw fla_nodes
+fla_ptr:
+    defw fla_nodes
 
 ;; Quantums times
 
@@ -307,10 +315,6 @@ qt:
     defp qt3 ;; 495 KHz
     defp qt4 ;; 330 KHz
     defp qt5 ;; 165 KHz
-
-;; Counter process
-
-cproc: defb $00
 
 ;; *******************
 ;; *** Section BSS ***

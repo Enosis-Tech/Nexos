@@ -14,16 +14,13 @@ define __STRUCTS_INC__
 
 include		"unistd.inc"
 
-macro nblock name
-	if name = 0
-		size_t	$00 ;; Reserve size for block
-		defw 	$00	;; struct mblock* next
-	else
-		name:
-			size_t	$00 ;; Reserve size for block
-			defw 	$00	;; struct mblock* next
-	endif
+macro block_t
+	defb   $00
+	size_t $00
 endm
+
+_hola:
+
 
 macro PCB name
 	name:

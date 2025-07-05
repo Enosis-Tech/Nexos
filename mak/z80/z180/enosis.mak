@@ -147,7 +147,7 @@ clean:
 # *** .PHONY rules ***
 # ********************
 
-.PHONY:
+.PHONY: all run-firm run-boot run-kern dis-firm dis-boot dis-kern clean
 
 # ****************************
 # *** Generate system file ***

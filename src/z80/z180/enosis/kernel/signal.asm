@@ -19,23 +19,25 @@ include     "signal.inc"
 kill:
     ret
 
-;;
-;;
-;;
+;; ***********************
+;; *** sigaction POSIX ***
+;; ***********************
 
 sigaction:
     ret
 
-;;
-;;
-;;
+;; ************************
+;; *** Generate signal  ***
+;; *** for use bit mask ***
+;; ************************
 
 sigprocmask:
     ret
 
-;;
-;;
-;;
+;; ***************************
+;; ***   Generate signal   ***
+;; *** for suspend process ***
+;; ***************************
 
 sigsuspend:
     ret
