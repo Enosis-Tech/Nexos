@@ -2,6 +2,7 @@
 #define WINDOW_HANDLES_H
 
 #include "window_system.h"
+#include "message_queue.h"
 #include "defs.h"
 
 
@@ -39,4 +40,36 @@ typedef struct HWND__ {
     struct HWND__ *owner;
     struct HWND__ *children[MAX_CHILD_WINDOWS];
 } HWND;
+
+// Prototipos de funciones
+HWND* WindowSystem_createWindow(WindowSystem* ws, const WNDCLASS* wndClass, const char* className, const char* title, int x, int y, int width, int height, HWND* parent, HWND* owner, UINT style, UINT esStyle);
+HWND* WindowSystem_findFreeWindowSlot(WindowSystem* ws);
+HWND* WindowSystem_getCapture(WindowSystem* ws);
+HWND* WindowSystem_getActiveWindow(WindowSystem* ws);
+BOOL WindowSystem_destroyWindow(WindowSystem* ws, HWND* hwnd);
+BOOL WindowSystem_postMessage(WindowSystem* ws, UINT msg, WPARAM wParam, LPARAM lParam, HWND* hwnd, bool highPriority);
+BOOL WindowSystem_sendMessage(WindowSystem* ws, UINT msg, WPARAM wParam, LPARAM lParam, HWND* hwnd);
+BOOL WindowSystem_getMessage(WindowSystem* ws, MSG* msg);
+BOOL WindowSystem_peekMessage(WindowSystem* ws, MSG* msg);
+BOOL WindowSystem_registerClass(WindowSystem* ws, const WNDCLASS* wndClass);
+BOOL WindowSystem_unregisterClass(WindowSystem* ws, const char* className);
+WNDCLASS* WindowSystem_findClass(WindowSystem* ws, const char* className);
+UINT WindowSystem_registerUserMessage(WindowSystem* ws);
+LRESULT DefWindowProc(HWND* hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+void WindowSystem_updateZOrder(WindowSystem* ws, HWND* hwnd);
+void WindowSystem_bringToTop(WindowSystem* ws, HWND* hwnd);
+void WindowSystem_setFocus(WindowSystem* ws, HWND* hwnd);
+void WindowSystem_setCapture(WindowSystem* ws, HWND* hwnd);
+void WindowSystem_releaseCapture(WindowSystem* ws);
+void WindowSystem_setActiveWindow(WindowSystem* ws, HWND* hwnd);
+void WindowSystem_invalidateRect(WindowSystem* ws, HWND* hwnd, const RECT* rect, bool erase);
+void WindowSystem_updateWindow(WindowSystem* ws, HWND* hwnd);
+void WindowSystem_redrawWindow(WindowSystem* ws, HWND* hwnd, const RECT* rect, bool erase);
+void WindowSystem_handleSizeMove(WindowSystem* ws, HWND* hwnd, int newWidth, int newHeight, int newX, int newY);
+void WindowSystem_handleMinMaxInfo(WindowSystem* ws, HWND* hwnd, MINMAXINFO* info);
+void WindowSystem_handleCommand(WindowSystem* ws, HWND* hwnd, WPARAM wParam, LPARAM lParam);
+void WindowSystem_handleKeyboard(WindowSystem* ws, HWND* hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+void WindowSystem_handleMouse(WindowSystem* ws, HWND* hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+BOOL WindowSystem_translateMessage(const MSG* msg); // Para versiones futuras, si es que se continua vea :v
 #endif

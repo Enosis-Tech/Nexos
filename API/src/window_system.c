@@ -5,8 +5,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <time.h>
-#include <vcruntime.h>
 
 struct WindowSystem {
     bool windowsInUse[MAX_WINDOS];
@@ -56,5 +54,4 @@ void* WindowsSystem_allocate(WindowSystem* ws, size_t size) {
     void* ptr = &ws->fakeHeap[ws->heapOffset];
     ws->heapOffset += alingedSize;
     return ptr;
-
 }
