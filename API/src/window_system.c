@@ -1,6 +1,5 @@
 #include "../include/window_system.h"
 #include "../include/message_queue.h"
-#include "../include/window_class.h"
 #include "../include/window_handles.h"
 #include <string.h>
 #include <stdlib.h>
